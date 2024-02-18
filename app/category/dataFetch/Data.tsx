@@ -11,7 +11,7 @@ async function getData() {
   return res.json();
 }
 
-export default async function Page() {
+export default async function Data() {
   const data = await getData();
 
   return <main>{data}</main>;
