@@ -1,7 +1,7 @@
 import Modal from "./(components)/Modal";
-import data from "./dataFetch/Data";
+import { getData } from "../category/dataFetch/Data";
 
-const Page = () => {
+export default async function Page() {
   const categories = [
     "احساسات",
     "شخصیت",
@@ -12,12 +12,13 @@ const Page = () => {
     "فعالیت",
     "اشیا",
   ];
+  const data = await getData();
 
   return (
     <main className="p-5 flex justify-center flex-col text-center gap-16 bg-black h-screen bg-gradient-to-b from-purple-300 to-purple-50">
       <div className="flex flex-col gap-5">
         <h1 className="text-purple-800"> دسته‌بندی خودت رو انتخاب کن </h1>
-        <p id="data"></p>
+        <p id="data">{data}</p>
         <button className="bg-white border-2 border-purple-800 text-purple-800 p-4 py-2.5 rounded-xl font-semibold">
           انتخاب تصادفی
         </button>
@@ -29,6 +30,4 @@ const Page = () => {
       </section>
     </main>
   );
-};
-
-export default Page;
+}
