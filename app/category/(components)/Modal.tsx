@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/dialog";
 import Link from "next/link";
 
-const Modal = ({ category }) => {
+const Modal = ({ category }: any) => {
   return (
     <Dialog>
       <DialogTrigger>

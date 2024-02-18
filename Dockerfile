@@ -1,23 +1,29 @@
-# Use the official Node.js image as the base
-FROM node:14
+FROM node:21-alpine AS base
 
-# Set the working directory
+# Rebuild the source code only when needed
+FROM base AS builder
+
 WORKDIR /app
-
-# Copy the package.json and package-lock.json files
 COPY package*.json ./
-
-# Install the dependencies
 RUN npm install
-
-# Copy the rest of the project files
 COPY . .
+ENV NEXT_TELEMETRY_DISABLED 1
+RUN npm run build
 
-# Build the Next.js app
-#RUN npm run build
 
-# Expose the port 3000
-EXPOSE 3000
+# Production image, copy all the files and run next
+FROM base AS runner
 
-# Start the app
+WORKDIR /app
+ENV NODE_ENV production
+ENV NEXT_TELEMETRY_DISABLED 1
+COPY package*.json ./
+RUN npm install --omit=dev
+
+COPY --from=builder /app/.next .next
+COPY --from=builder /app/public public
+COPY --from=builder /app/package*.json ./
+
+USER node
+
 CMD ["npm", "start"]
