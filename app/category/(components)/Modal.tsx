@@ -8,14 +8,22 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import Link from "next/link";
+import Image from "next/image";
 
-const Modal = ({ category }: any) => {
+const Modal = ({ categoryTitle, categoryIcon }: any) => {
   return (
     <Dialog>
       <DialogTrigger>
-        <button className="bg-white border-2 border-purple-800 text-purple-800 p-5 rounded-2xl font-semibold">
-          {category}
-        </button>
+        <div className="bg-gray-50 flex flex-col justify-center text-center items-center w-[70px] h-[90px] gap-3 shadow-lg rounded-2xl font-medium">
+          <Image
+            alt="icon image"
+            src={categoryIcon}
+            width={100}
+            height={100}
+            className="w-[48px] h-[48px]"
+          />
+          <p className="text-xs">{categoryTitle}</p>
+        </div>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
