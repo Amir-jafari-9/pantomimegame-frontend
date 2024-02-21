@@ -1,23 +1,29 @@
+"use client";
+
+
 import Image from "next/image";
 import Modal from "./category/(components)/Modal";
 import handleLevelButtonClick from "./category/(components)/Modal";
+import { useState } from "react";
 
-async function fetchData() {
-  const res = await fetch(
-    "http://localhost:8000/api/v1/words/word?category=to&level=1",
-    {
-      method: "GET",
-    }
-  );
-  if (!res.ok) {
-    throw new Error("Failed to fetch data");
-  }
-  return res.json();
-}
+// async function fetchData() {
+//   const res = await fetch(
+//     "http://localhost:8000/api/v1/words/word?category=tc&level=3",
+//     {
+//       method: "GET",
+//     }
+//   );
+//   if (!res.ok) {
+//     throw new Error("Failed to fetch data");
+//   }
+//   return res.json();
+// }
 
-export default async function Page() {
-  const data = await fetchData();
-  console.log(data);
+export default function Page() {
+  // const data = await fetchData();
+  // console.log(data);
+
+
 
   const categories = [
     {
@@ -104,7 +110,7 @@ export default async function Page() {
 
   return (
     <main className="p-4 flex justify-center flex-col items-center gap-16 h-full py-10">
-      <p className="text-white text-xl">{data.data.word}</p>
+      {/* <p className="text-white text-xl">{data.data.word}</p> */}
       <h1>
         <Image
           alt="icon image"
