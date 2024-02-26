@@ -1,6 +1,9 @@
 import React from "react";
-const appVersion = process.env.APP_VERSION || "Version not set";
+import { unstable_noStore as noStore } from 'next/cache'
+
 const page = () => {
+  noStore()
+  const appVersion = process.env.APP_VERSION || "Version not set";
   return (
     <div className="flex flex-col justify-center items-center text-white h-screen">
       <h1>App Version</h1>
