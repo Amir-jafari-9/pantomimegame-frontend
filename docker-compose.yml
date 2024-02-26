@@ -1,0 +1,17 @@
+# Specify the Compose file version
+version: '3'
+
+# Define the services
+services:
+# The Next.js app service
+app:
+# Build the image from the Dockerfile
+build: .
+# Name the image as next-game
+image: next-game
+# Map the port 3000 of the container to the port 80 of the host
+ports:
+•  "80:3000"
+
+# Restart the container automatically if it fails
+restart: always
