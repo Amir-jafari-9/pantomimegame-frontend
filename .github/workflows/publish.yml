@@ -30,4 +30,6 @@ jobs:
         with:
           context: .
           push: true
+          cache-from: type=registry,ref=${{ secrets.DOCKERHUB_USERNAME }}/pantomimegame-frontend:buildcache
+          cache-to: type=registry,ref=${{ secrets.DOCKERHUB_USERNAME }}/pantomimegame-frontend:buildcache,mode=max
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/pantomimegame-frontend:${{ github.ref_name }}
