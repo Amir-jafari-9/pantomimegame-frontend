@@ -37,7 +37,7 @@ const Page = () => {
             ))}
 
             <button
-              className="text-white"
+              className="text-white py-4"
               onClick={() => {
                 router.back();
               }}
