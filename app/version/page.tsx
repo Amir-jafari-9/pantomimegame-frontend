@@ -5,7 +5,6 @@ const page = () => {
     <div className="flex flex-col justify-center items-center text-white h-screen">
       <h1>App Version</h1>
       <h2>{appVersion}</h2>
-      
     </div>
   );
 };
