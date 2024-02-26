@@ -1,30 +1,7 @@
-"use client";
-
-
 import Image from "next/image";
-import Modal from "./category/(components)/Modal";
-import handleLevelButtonClick from "./category/(components)/Modal";
-import { useState } from "react";
-
-// async function fetchData() {
-//   const res = await fetch(
-//     "http://localhost:8000/api/v1/words/word?category=tc&level=3",
-//     {
-//       method: "GET",
-//     }
-//   );
-//   if (!res.ok) {
-//     throw new Error("Failed to fetch data");
-//   }
-//   return res.json();
-// }
+import Link from "next/link";
 
 export default function Page() {
-  // const data = await fetchData();
-  // console.log(data);
-
-
-
   const categories = [
     {
       id: "TE",
@@ -110,7 +87,6 @@ export default function Page() {
 
   return (
     <main className="p-4 flex justify-center flex-col items-center gap-16 h-full py-10">
-      {/* <p className="text-white text-xl">{data.data.word}</p> */}
       <h1>
         <Image
           alt="icon image"
@@ -145,12 +121,15 @@ export default function Page() {
         </section>
         <section className="grid grid-cols-4 gap-2">
           {categories.map((category, index) => (
-            <Modal
-              key={index}
-              categoryTitle={category.title}
-              categoryIcon={category.icon}
-              categoryId={category.id}
-            />
+            <Link
+            key={index}
+            href={`/category/${category.id}`}
+            passHref
+            className="bg-gray-50 flex flex-col justify-center items-center h-full w-full p-4 gap-3 shadow-lg rounded-2xl  hover:shadow-2xl  hover:scale-105 transition-transform active:translate-y-1"
+          >
+            <Image alt="icon image" src={category.icon} width={100} height={100} />
+            <p className="text-xs font-medium lg:text-base">{category.title}</p>
+          </Link>
           ))}
         </section>
       </section>
