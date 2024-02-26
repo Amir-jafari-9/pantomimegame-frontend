@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import React from "react";
 import Link from "next/link";
 import Image from "next/image";
@@ -26,7 +26,7 @@ export default function Page() {
           </button>
           <button type="button">
             <Link
-              href="../../game"
+              href={`${pathname}/level/2`}
               className="hover:scale-105 transition-transform active:translate-y-1"
             >
               <Image
@@ -40,7 +40,7 @@ export default function Page() {
           </button>
           <button type="button">
             <Link
-              href="../../game"
+              href={`${pathname}/level/3`}
               className="hover:scale-105 transition-transform active:translate-y-1"
             >
               <Image
@@ -52,7 +52,7 @@ export default function Page() {
               />
             </Link>
           </button>
-          <button className="text-white">
+          <button className="text-white py-3">
             <Link href="/?categoty=to" as="/">
               بستن
             </Link>
