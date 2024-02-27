@@ -161,6 +161,7 @@ export default function Page() {
               key={index}
               href={`/category/${category.id}`}
               passHref
+              scroll={false}
               className="bg-gray-50 flex flex-col justify-center items-center h-full w-full p-4 gap-3 shadow-lg rounded-2xl  hover:shadow-2xl  hover:scale-105 transition-transform active:translate-y-1"
             >
               <Image
