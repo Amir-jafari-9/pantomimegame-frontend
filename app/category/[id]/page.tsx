@@ -36,7 +36,7 @@ const Page = ({ params: { id } }: { params: { id: string } }) => {
     <div>
       {data && (
         <div className="fixed inset-0 z-50 bg-black/80">
-          <div className="bg-[url('/assets/modalBg.svg')] bg-center h-full bg-no-repeat flex flex-col items-center justify-center text-center fixed left-[50%] top-[50%] z-50  max-w-lg translate-x-[-50%] translate-y-[-50%] transition-transform  sm:rounded-lg w-full ">
+          <div className="bg-[url('/assets/modalBg.svg')] bg-center h-full bg-no-repeat flex flex-col items-center justify-center text-center fixed left-[50%] top-[50%] z-50  max-w-lg translate-x-[-50%] translate-y-[-50%] transition-all duration-1000 delay-1000 sm:rounded-lg w-full ">
             <section className="h-full relative flex flex-col items-center justify-center text-center">
               <div className="flex flex-col">
                 <h1 className=" bg-[url('/assets/categoryBg.svg')] bg-center bg-contain h-14 bg-no-repeat flex flex-col items-center justify-center text-center text-white text-lg font-semibold mb-7">
