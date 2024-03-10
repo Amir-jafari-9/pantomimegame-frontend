@@ -13,12 +13,10 @@ export default function RootLayout(props: {
 }) {
   return (
     <html dir="rtl">
-      <Suspense fallback={<p className="text-white">Loading feed...</p>}>
-        <body className="bg-[#031A30]">
-          {props.children}
-          {props.modal}
-        </body>
-      </Suspense>
+      <body className="bg-[#031A30]">
+        {props.children}
+        {props.modal}
+      </body>
     </html>
   );
 }
