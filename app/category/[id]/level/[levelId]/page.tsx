@@ -8,6 +8,7 @@ import { useRouter } from "next/navigation";
 import Lottie from "lottie-react";
 import animationData from "../../../../../public/assets/animationData.json"; // Import your JSON file
 import { count } from "console";
+import Cookies from "js-cookie";
 
 interface Data {
   category: string;
@@ -31,11 +32,11 @@ export default function Page({
   const [showWord, setShowWord] = useState(false);
   const [complete, setComplete] = useState(false);
   const [timesUp, setTimesUp] = useState(false);
-  const [cheat, setCheat] = useState(0);
+  const [cheat, setCheat] = useState(3);
   const [quitAsk, setquitAsk] = useState(false);
   const [quit, setquit] = useState(false);
   const [timeScore, setTimeScore] = useState(0);
-  const [clickCount, setClickCount] = useState(0);
+  const [clickCount, setClickCount] = useState(2);
   const [redScreen, setRedScreen] = useState(false);
   const [rules, setRules] = useState(false);
 
@@ -57,8 +58,8 @@ export default function Page({
 
   const handleRetryClick = () => {
     handleRevalidate();
-    if (clickCount < 2) {
-      setClickCount((prevCount) => prevCount + 1);
+    if (clickCount > 0) {
+      setClickCount((prevCount) => prevCount - 1);
     }
   };
 
@@ -174,18 +175,43 @@ export default function Page({
     setCounterActive(false);
   };
 
-  const [muted, setMuted] = useState(false);
+  const [muted, setMuted] = useState(() => {
+    const savedMutedState = Cookies.get('musicMuted');
+    return savedMutedState === 'true';
+  });
 
   useEffect(() => {
     const audio = new Audio("/music/music.mp3");
     audio.loop = true;
     audio.muted = muted;
     audio.play();
+    Cookies.set("musicMuted", muted.toString());
+    const savedMutedState = Cookies.get("musicMuted");
+    if (savedMutedState) {
+      setMuted(savedMutedState === "true");
+    }
 
     return () => {
       audio.pause();
     };
   }, [muted]);
+
+  // useEffect(() => {
+  //   // Save muted state to a cookie
+  //   Cookies.set("musicMuted", muted.toString());
+  //   const savedMutedState = Cookies.get("musicMuted");
+  //   if (savedMutedState) {
+  //     setMuted(savedMutedState === "true");
+  //   }
+  // }, [muted]);
+
+  // useEffect(() => {
+  //   // Check if there's a muted state saved in the cookie
+  //   const savedMutedState = Cookies.get("musicMuted");
+  //   if (savedMutedState) {
+  //     setMuted(savedMutedState === "true");
+  //   }
+  // }, [muted]); // Include muted in the dependency array
 
   const toggleMute = () => {
     setMuted(!muted);
@@ -253,7 +279,7 @@ export default function Page({
               <div>
                 <Image
                   alt="icon image"
-                  src="/assets/TimesUpModal.svg"
+                  src="/assets/timesUpModal.svg"
                   width={100}
                   height={100}
                   className="w-full"
@@ -329,7 +355,7 @@ export default function Page({
             </section>
           </div>
         )}
-        {cheat === 3 && (
+        {cheat === 0 && (
           <div className="fixed inset-0 z-50 bg-black/80">
             <section className=" bg-transparent h-full flex flex-col items-center justify-center text-center fixed left-[50%] top-[50%] z-50 max-w-lg translate-x-[-50%] translate-y-[-50%] sm:rounded-lg w-full lg:px-20 gap-2">
               <div>
@@ -402,14 +428,14 @@ export default function Page({
                   </p>
                   <div className="pl-2">
                     <div className="bg-[url('/assets/greenContainer.svg')] bg-center h-12 bg-no-repeat w-12 flex justify-center items-center text-white text-semibold text-xl">
-                      {data && <p>{data.score}</p>}
+                      <p>{data?.score}</p>
                     </div>
                   </div>
                 </div>
                 <div className="flex justify-between items-center w-full bg-[#15314C] overflow-visible h-4 ">
                   <div className="pr-2">
                     <div className="bg-[url('/assets/redContainer.svg')] bg-center h-12 bg-no-repeat w-12 flex justify-center items-center text-white text-semibold text-xl">
-                      {clickCount}
+                      {2 - clickCount}
                     </div>
                   </div>
                   <p className="text-xl text-white text-semibold pl-2">
@@ -429,7 +455,7 @@ export default function Page({
                 <div className="flex justify-between items-center w-full bg-[#15314C] overflow-visible h-4 ">
                   <div className="pr-2">
                     <div className="bg-[url('/assets/redContainer.svg')] bg-center h-12 bg-no-repeat w-12 flex justify-center items-center text-white text-semibold text-xl">
-                      {cheat}
+                      {3 - cheat}
                     </div>
                   </div>
                   <p className="text-xl text-white text-semibold pl-2"> خطا </p>
@@ -441,7 +467,10 @@ export default function Page({
                 </p>
                 {data && (
                   <p className="text-white text-semibold text-lg">
-                    {data.score - cheat - clickCount + (timeScore - 2)}
+                    {data?.score -
+                      (3 - cheat) -
+                      (2 - clickCount) +
+                      (timeScore - 2)}
                   </p>
                 )}
               </div>
@@ -457,146 +486,142 @@ export default function Page({
             </section>
           </div>
         )}
-        {data && (
-          <>
-            <div className="flex flex-col gap-6 justify-center items-center">
-              {counterActive ? (
-                <section className="flex flex-col justify-center items-center gap-6 text-white/50">
-                  <p>زمان مونده تا شروع:</p>
-                  {showWord && !showFinishTimer && (
-                    <div className="w-full flex justify-center items-center">
-                      <p className="text-white text-4xl font-semibold">
-                        {counter}
-                      </p>
-                    </div>
-                  )}
-                </section>
-              ) : (
-                <section className="flex gap-2 text-white/50 pt-6">
-                  <h1>{data.name}</h1>
-                  <div> | </div>
-                  <p>{data.score} امتیازی</p>
-                </section>
-              )}
 
-              <section className=" text-white/50 flex justify-center items-center">
-                {timerActive && showFinishTimer && (
-                  <div className="flex items-center -ml-10">
-                    <p className="text-2xl text-white font-semibold">
-                      {" "}
-                      {formatTime(timer)}
-                    </p>
-                    <Lottie
-                      animationData={animationData}
-                      className="w-16 -px-5"
-                    />
-                  </div>
-                )}
-                {showFinishTimer && timer === 0 && <p>پایان</p>}
-              </section>
-            </div>
-            <section>
-              <div className="bg-[url('/assets/wordContainer.svg')] bg-contain bg-center bg-no-repeat flex text-center">
-                <div className="text-white text-lg p-24 whitespace lg:p-32">
-                  {showWord ? (
-                    <p>{data.word}</p>
-                  ) : (
-                    <button onClick={eyeClickHandler}>
-                      <Image
-                        alt="icon image"
-                        src="/assets/eye-slash.svg"
-                        width={100}
-                        height={100}
-                        className="w-10"
-                      />
-                    </button>
-                  )}
-                </div>
-              </div>
-            </section>
-            <section className="flex">
-              {showFinishTimer ? (
-                <div className="flex items-center gap-1">
-                  <button onClick={() => setquitAsk(true)}>
-                    <Image
-                      alt="icon image"
-                      src="/assets/noIcon.svg"
-                      width={100}
-                      height={100}
-                      className="w-14"
-                    />
-                  </button>
-                  <button
-                    onClick={() => {
-                      setComplete(true);
-                      setTimerActive(false);
-                    }}
-                  >
-                    <Image
-                      alt="icon image"
-                      src="/assets/yesIcon.svg"
-                      width={100}
-                      height={100}
-                      className="w-28"
-                    />
-                  </button>
-                  <button
-                    className="relative"
-                    onClick={() => {
-                      setRedScreen(true);
-                      setTimeout(() => {
-                        setRedScreen(false);
-                      }, 200);
-                      // Use the functional form of setCheat to ensure you're working with the most up-to-date value
-                      setCheat((prevCheat) => prevCheat + 1);
-                      if (cheat + 1 === 3) {
-                        setTimerActive(false);
-                      }
-                    }}
-                  >
-                    <div className="bg-red-500 p-2 w-max absolute -left-2 py-1 text-yellow-400 text-bold rounded-full text-xs">
-                      {cheat} {/* Display the updated value */}{" "}
-                    </div>
-                    <Image
-                      alt="icon image"
-                      src="/assets/cheatSign.svg"
-                      width={100}
-                      height={100}
-                      className="w-14"
-                    />
-                  </button>
-                </div>
-              ) : (
-                <div className={` ${showWord ? "flex gap-5" : "hidden"}`}>
-                  <button onClick={letsGoClickHandle}>
-                    <Image
-                      alt="icon image"
-                      src="/assets/letsGo.svg"
-                      width={100}
-                      height={100}
-                      className="h-14"
-                    />
-                  </button>
-                  <button
-                    onClick={handleRetryClick}
-                    disabled={clickCount >= 2}
-                    className={` ${
-                      clickCount >= 2 ? "pointer-events-none opacity-50" : ""
-                    }`}
-                  >
-                    <Image
-                      alt="icon image"
-                      src="/assets/retry.svg"
-                      width={100}
-                      height={100}
-                      className="w-12 h-12"
-                    />
-                  </button>
+        <div className="flex flex-col gap-6 justify-center items-center">
+          {counterActive ? (
+            <section className="flex flex-col justify-center items-center gap-6 text-white/50">
+              <p>زمان مونده تا شروع:</p>
+              {showWord && !showFinishTimer && (
+                <div className="w-full flex justify-center items-center">
+                  <p className="text-white text-4xl font-semibold">{counter}</p>
                 </div>
               )}
             </section>
-          </>
-        )}
+          ) : (
+            <section className="flex gap-2 text-white/50 pt-6">
+              <h1>{data?.name}</h1>
+              <div> | </div>
+              <p>{data?.score} امتیازی</p>
+            </section>
+          )}
+
+          <section className=" text-white/50 flex justify-center items-center">
+            {timerActive && showFinishTimer && (
+              <div className="flex items-center -ml-10">
+                <p className="text-2xl text-white font-semibold">
+                  {formatTime(timer)}
+                </p>
+                <Lottie animationData={animationData} className="w-16 -px-5" />
+              </div>
+            )}
+            {showFinishTimer && timer === 0 && <p>پایان</p>}
+          </section>
+        </div>
+        <section>
+          <div className="bg-[url('/assets/wordContainer.svg')] bg-contain bg-center bg-no-repeat flex text-center">
+            <div className="text-white text-lg p-24 whitespace lg:p-32">
+              {showWord ? (
+                <p>{data?.word}</p>
+              ) : (
+                <button onClick={eyeClickHandler}>
+                  <Image
+                    alt="icon image"
+                    src="/assets/eye-slash.svg"
+                    width={100}
+                    height={100}
+                    className="w-10"
+                  />
+                </button>
+              )}
+            </div>
+          </div>
+        </section>
+        <section className="flex">
+          {showFinishTimer ? (
+            <div className="flex items-center gap-1">
+              <button onClick={() => setquitAsk(true)}>
+                <Image
+                  alt="icon image"
+                  src="/assets/noIcon.svg"
+                  width={100}
+                  height={100}
+                  className="w-14"
+                />
+              </button>
+              <button
+                onClick={() => {
+                  setComplete(true);
+                  setTimerActive(false);
+                }}
+              >
+                <Image
+                  alt="icon image"
+                  src="/assets/yesIcon.svg"
+                  width={100}
+                  height={100}
+                  className="w-28"
+                />
+              </button>
+              <button
+                className="relative"
+                onClick={() => {
+                  setRedScreen(true);
+                  setTimeout(() => {
+                    setRedScreen(false);
+                  }, 200);
+                  // Use the functional form of setCheat to ensure you're working with the most up-to-date value
+                  setCheat((prevCheat) => prevCheat - 1);
+                  if (cheat - 1 === 0) {
+                    setTimerActive(false);
+                  }
+                }}
+              >
+                <div className="bg-red-500 p-2 w-max absolute -left-2 py-1 text-yellow-400 text-bold rounded-full text-xs">
+                  {cheat} {/* Display the updated value */}{" "}
+                </div>
+                <Image
+                  alt="icon image"
+                  src="/assets/cheatSign.svg"
+                  width={100}
+                  height={100}
+                  className="w-14"
+                />
+              </button>
+            </div>
+          ) : (
+            <div className={` ${showWord ? "flex gap-5" : "hidden"}`}>
+              <button onClick={letsGoClickHandle}>
+                <Image
+                  alt="icon image"
+                  src="/assets/letsGo.svg"
+                  width={100}
+                  height={100}
+                  className="h-14"
+                />
+              </button>
+              <button
+                onClick={handleRetryClick}
+                disabled={clickCount <= 0}
+                className={` ${
+                  clickCount <= 0
+                    ? "pointer-events-none opacity-50 relative"
+                    : "relative"
+                }`}
+              >
+                <p className="text-white absolute top-[1.3rem] left-[1.3rem] text-xs font-bold">
+                  {clickCount}
+                </p>
+                <Image
+                  alt="icon image"
+                  src="/assets/retry.svg"
+                  width={100}
+                  height={100}
+                  className="w-12 h-12"
+                />
+              </button>
+            </div>
+          )}
+        </section>
       </main>
     </>
   );

@@ -13,3 +13,4 @@ export default async function fetchData(id: string, levelId: string) {
   }
   return res.json();
 }
+
