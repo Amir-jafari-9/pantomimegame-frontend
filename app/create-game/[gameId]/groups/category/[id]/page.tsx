@@ -3,10 +3,14 @@
 import { usePathname, useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
-import fetchData from "@/app/category/[id]/level/[levelId]/dataFetch";
 import Link from "next/link";
+import fetchData from "./level/[levelId]/dataFetch";
 
-const Page = ({ params: { id } }: { params: { id: string } }) => {
+const Page = ({
+  params: { id, gameId },
+}: {
+  params: { id: string; gameId: string };
+}) => {
   const [data, setData] = useState<Data | null>(null);
 
   interface Data {
@@ -17,12 +21,12 @@ const Page = ({ params: { id } }: { params: { id: string } }) => {
   }
   useEffect(() => {
     const fetchDataAsync = async () => {
-      const dataGet = await fetchData(id, "1");
+      const dataGet = await fetchData(id, "1", gameId, "new");
       setData(dataGet.data);
     };
 
     fetchDataAsync();
-  }, [id]);
+  }, [id,gameId]);
 
   const router = useRouter();
   const pathname = usePathname();
@@ -90,22 +94,16 @@ const Page = ({ params: { id } }: { params: { id: string } }) => {
             className="w-full px-10 lg:w-56 lg:px-0"
           />
           <div>
-          <p className="text-center">
-            آخ! سرورمون قطع شده 
-          </p>
-          <p className="text-center">
-            لطفا بعدا دوباره تلاش کن.
-          </p>
+            <p className="text-center">آخ! سرورمون قطع شده</p>
+            <p className="text-center">لطفا بعدا دوباره تلاش کن.</p>
           </div>
           <Link href="/">
-          <Image
-            alt="503 image"
-            src="/assets/goBack.svg"
-            width={100}
-            height={100}
-
-          />
-
+            <Image
+              alt="503 image"
+              src="/assets/goBack.svg"
+              width={100}
+              height={100}
+            />
           </Link>
         </div>
       )}

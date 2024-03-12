@@ -13,15 +13,9 @@ function NotFoundPage() {
         className="w-full px-10 lg:w-56 lg:px-0"
       />
       <div>
-        <p className="text-center">
-          اوه نه! 
-        </p>
-        <p className="text-center">
-         چیزی که دنبالشی گم شده!      
-        </p>
-        <p className="text-center">
-           لطفا برگرد و بعدا تلاش کن.
-        </p>
+        <p className="text-center">اوه نه!</p>
+        <p className="text-center">چیزی که دنبالشی گم شده!</p>
+        <p className="text-center">لطفا برگرد و بعدا تلاش کن.</p>
       </div>
       <Link href="/">
         <Image

@@ -3,28 +3,30 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import fetchData from "./dataFetch";
 import Link from "next/link";
-import { redirect } from "next/navigation";
 import { useRouter } from "next/navigation";
 import Lottie from "lottie-react";
-import animationData from "../../../../../public/assets/animationData.json"; // Import your JSON file
-import { count } from "console";
+import animationData from "../../../../../../../../public/assets/animationData.json"; // Import your JSON file
+import animationConfetti from "../../../../../../../../public/assets/animationConfetti.json"; // Import your JSON file
 import Cookies from "js-cookie";
+import PostScoreData from "./scoreDataPost";
 
 interface Data {
   category: string;
   level: string;
-  word: string;
   name: string;
   score: number;
+  words: {
+    title: string;
+    wordId: string;
+  };
 }
 
 export default function Page({
-  params: { id, levelId },
+  params: { id, levelId, gameId },
 }: {
-  params: { id: string; levelId: string };
+  params: { id: string; levelId: string; gameId: string };
 }) {
   const [data, setData] = useState<Data | null>(null);
-  const [timer, setTimer] = useState(0);
   const [timerActive, setTimerActive] = useState(false);
   const [counter, setCounter] = useState(0);
   const [counterActive, setCounterActive] = useState(false);
@@ -39,20 +41,40 @@ export default function Page({
   const [clickCount, setClickCount] = useState(2);
   const [redScreen, setRedScreen] = useState(false);
   const [rules, setRules] = useState(false);
+  // const [timer, setTimer] = useState(0);
+  const [timer, setTimer] = useState(() => {
+    let initialTime = 0;
+    if (levelId === "1") {
+      initialTime = 50;
+    } else if (levelId === "2") {
+      initialTime = 80;
+    } else if (levelId === "3") {
+      initialTime = 110;
+    } else if (levelId === "4") {
+      initialTime = 180;
+    }
+    return initialTime;
+  });
+
+  const addTime = () => {
+    setTimer((prevTimer) => prevTimer + 20); // Add 20 seconds to timer
+  };
 
   const router = useRouter();
 
   useEffect(() => {
     const fetchDataAsync = async () => {
-      const dataGet = await fetchData(id, levelId);
+      const status = "new";
+      const dataGet = await fetchData(id, levelId, gameId, status);
       setData(dataGet.data);
     };
 
     fetchDataAsync();
-  }, [id, levelId]);
+  }, [id, levelId, gameId]);
 
   const handleRevalidate = async () => {
-    const dataGet = await fetchData(id, levelId);
+    const status = "change";
+    const dataGet = await fetchData(id, levelId, gameId, status);
     setData(dataGet.data);
   };
 
@@ -176,8 +198,8 @@ export default function Page({
   };
 
   const [muted, setMuted] = useState(() => {
-    const savedMutedState = Cookies.get('musicMuted');
-    return savedMutedState === 'true';
+    const savedMutedState = Cookies.get("musicMuted");
+    return savedMutedState === "true";
   });
 
   useEffect(() => {
@@ -212,6 +234,110 @@ export default function Page({
   //     setMuted(savedMutedState === "true");
   //   }
   // }, [muted]); // Include muted in the dependency array
+
+  const handleYesButtonClick = async () => {
+    setComplete(true);
+    setTimerActive(false);
+    // Check if gameTitle is empty or contains only whitespace
+    const postScoreData = {
+      gameId: gameId,
+      wordId: data?.words.wordId,
+      restTimePoints: timeScore - 2,
+      totalCheat: 3 - cheat,
+      totalChange: 2 - clickCount,
+      guess: true,
+    };
+    console.log(postScoreData);
+
+    try {
+      console.log("score data", postScoreData);
+      const responseData = await PostScoreData(postScoreData);
+      console.log("Response Data:", responseData);
+
+      // Use responseData directly to construct the URL for navigation
+    } catch (error) {
+      console.error("Failed to send data:", error);
+    }
+  };
+
+  const handleNoButtonClick = async () => {
+    // Check if gameTitle is empty or contains only whitespace
+    const postScoreData = {
+      gameId: gameId,
+      wordId: data?.words.wordId,
+      restTimePoints: timeScore - 2,
+      totalCheat: 3 - cheat,
+      totalChange: 2 - clickCount,
+      guess: true,
+    };
+    console.log(postScoreData);
+
+    try {
+      console.log("score data", postScoreData);
+      const responseData = await PostScoreData(postScoreData);
+      console.log("Response Data:", responseData);
+
+      // Use responseData directly to construct the URL for navigation
+    } catch (error) {
+      console.error("Failed to send data:", error);
+    }
+  };
+
+  const handleCheatButtonClick = async () => {
+    setRedScreen(true);
+    setTimeout(() => {
+      setRedScreen(false);
+    }, 200);
+    // Use the functional form of setCheat to ensure you're working with the most up-to-date value
+    setCheat((prevCheat) => prevCheat - 1);
+    if (cheat - 1 === 0) {
+      setTimerActive(false);
+    }
+
+    // Check if gameTitle is empty or contains only whitespace
+    const postScoreData = {
+      gameId: gameId,
+      wordId: data?.words.wordId,
+      restTimePoints: timeScore - 2,
+      totalCheat: 3 - cheat,
+      totalChange: 2 - clickCount,
+      guess: true,
+    };
+    console.log(postScoreData);
+
+    try {
+      console.log("score data", postScoreData);
+      const responseData = await PostScoreData(postScoreData);
+      console.log("Response Data:", responseData);
+
+      // Use responseData directly to construct the URL for navigation
+    } catch (error) {
+      console.error("Failed to send data:", error);
+    }
+  };
+
+  const handleTimesUpButtonClick = async () => {
+    // Check if gameTitle is empty or contains only whitespace
+    const postScoreData = {
+      gameId: gameId,
+      wordId: data?.words.wordId,
+      restTimePoints: timeScore - 2,
+      totalCheat: 3 - cheat,
+      totalChange: 2 - clickCount,
+      guess: true,
+    };
+    console.log(postScoreData);
+
+    try {
+      console.log("score data", postScoreData);
+      const responseData = await PostScoreData(postScoreData);
+      console.log("Response Data:", responseData);
+
+      // Use responseData directly to construct the URL for navigation
+    } catch (error) {
+      console.error("Failed to send data:", error);
+    }
+  };
 
   const toggleMute = () => {
     setMuted(!muted);
@@ -285,7 +411,7 @@ export default function Page({
                   className="w-full"
                 />
               </div>
-              <Link href="/">
+              <Link href={`/create-game/${gameId}/groups`}>
                 <Image
                   alt="icon image"
                   src="/assets/againButton.svg"
@@ -309,7 +435,7 @@ export default function Page({
                   className="w-full"
                 />
               </div>
-              <Link href="/">
+              <Link href={`/create-game/${gameId}/groups`}>
                 <Image
                   alt="icon image"
                   src="/assets/againButton.svg"
@@ -367,7 +493,7 @@ export default function Page({
                   className="w-full"
                 />
               </div>
-              <Link href="/">
+              <Link href={`/create-game/${gameId}/groups`}>
                 <Image
                   alt="icon image"
                   src="/assets/againButton.svg"
@@ -410,7 +536,12 @@ export default function Page({
 
         {complete && (
           <div className="fixed inset-0 z-50 bg-black/80">
-            <section className="bg-[url('/assets/scoreContainer.svg')] bg-center h-full bg-no-repeat flex flex-col items-center justify-center text-center fixed left-[50%] top-[50%] z-50 max-w-lg translate-x-[-50%] translate-y-[-50%] sm:rounded-lg w-full lg:px-20 gap-12">
+            <section className="bg-[url('/assets/scoreContainer.svg')] bg-center h-full bg-no-repeat flex flex-col items-center justify-center text-center fixed left-[50%] top-[50%] z-50 max-w-lg translate-x-[-50%] translate-y-[-50%] sm:rounded-lg w-full lg:px-20 gap-12 ">
+              <Lottie
+                animationData={animationConfetti}
+                className="w-full h-[70%] -px-5 absolute top-0"
+              />
+
               <div>
                 <Image
                   alt="icon image"
@@ -474,7 +605,7 @@ export default function Page({
                   </p>
                 )}
               </div>
-              <Link href="/">
+              <Link href={`/create-game/${gameId}/groups`}>
                 <Image
                   alt="icon image"
                   src="/assets/againButton.svg"
@@ -506,14 +637,17 @@ export default function Page({
           )}
 
           <section className=" text-white/50 flex justify-center items-center">
-            {timerActive && showFinishTimer && (
-              <div className="flex items-center -ml-10">
-                <p className="text-2xl text-white font-semibold">
-                  {formatTime(timer)}
-                </p>
-                <Lottie animationData={animationData} className="w-16 -px-5" />
-              </div>
-            )}
+            {/* {timerActive && showFinishTimer && ( */}
+            <div className="flex items-center -ml-10">
+              {/* <button onClick={addTime} className="pl-3 text-sm">
+                +20s
+              </button> */}
+              <p className="text-4xl text-white font-semibold">
+                {formatTime(timer)}
+              </p>
+              <Lottie animationData={animationData} className="w-16 -px-5" />
+            </div>
+            {/* )} */}
             {showFinishTimer && timer === 0 && <p>پایان</p>}
           </section>
         </div>
@@ -521,7 +655,7 @@ export default function Page({
           <div className="bg-[url('/assets/wordContainer.svg')] bg-contain bg-center bg-no-repeat flex text-center">
             <div className="text-white text-lg p-24 whitespace lg:p-32">
               {showWord ? (
-                <p>{data?.word}</p>
+                <p>{data?.words.title}</p>
               ) : (
                 <button onClick={eyeClickHandler}>
                   <Image
@@ -548,12 +682,7 @@ export default function Page({
                   className="w-14"
                 />
               </button>
-              <button
-                onClick={() => {
-                  setComplete(true);
-                  setTimerActive(false);
-                }}
-              >
+              <button onClick={handleYesButtonClick}>
                 <Image
                   alt="icon image"
                   src="/assets/yesIcon.svg"
@@ -562,20 +691,7 @@ export default function Page({
                   className="w-28"
                 />
               </button>
-              <button
-                className="relative"
-                onClick={() => {
-                  setRedScreen(true);
-                  setTimeout(() => {
-                    setRedScreen(false);
-                  }, 200);
-                  // Use the functional form of setCheat to ensure you're working with the most up-to-date value
-                  setCheat((prevCheat) => prevCheat - 1);
-                  if (cheat - 1 === 0) {
-                    setTimerActive(false);
-                  }
-                }}
-              >
+              <button className="relative" onClick={handleCheatButtonClick}>
                 <div className="bg-red-500 p-2 w-max absolute -left-2 py-1 text-yellow-400 text-bold rounded-full text-xs">
                   {cheat} {/* Display the updated value */}{" "}
                 </div>
@@ -589,14 +705,14 @@ export default function Page({
               </button>
             </div>
           ) : (
-            <div className={` ${showWord ? "flex gap-5" : "hidden"}`}>
+            <div className={` ${showWord ? "flex gap-7" : "hidden"}`}>
               <button onClick={letsGoClickHandle}>
                 <Image
                   alt="icon image"
                   src="/assets/letsGo.svg"
                   width={100}
                   height={100}
-                  className="h-14"
+                  className="w-32"
                 />
               </button>
               <button
@@ -608,7 +724,7 @@ export default function Page({
                     : "relative"
                 }`}
               >
-                <p className="text-white absolute top-[1.3rem] left-[1.3rem] text-xs font-bold">
+                <p className="text-white absolute top-[1.5rem] left-[1.3rem] text-xs font-bold">
                   {clickCount}
                 </p>
                 <Image

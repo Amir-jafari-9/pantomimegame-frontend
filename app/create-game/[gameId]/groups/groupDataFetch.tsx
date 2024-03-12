@@ -1,9 +1,8 @@
 "use server";
-export default async function fetchData(id: string, levelId: string) {
+export default async function fetchGroupData(gameId: string) {
   const res = await fetch(
-    `https://api.fnvr.ir/api/v1/words/word?category=${id}&level=${levelId}`,
+    `http://localhost:8000/api/v1/games/game?gameId=${gameId}`,
     {
-      next: { tags: ['collection'] },
       method: "GET",
       mode: "cors",
     }
@@ -13,4 +12,3 @@ export default async function fetchData(id: string, levelId: string) {
   }
   return res.json();
 }
-

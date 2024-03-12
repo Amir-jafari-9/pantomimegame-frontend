@@ -1,31 +1,38 @@
 "use client";
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
+import PostData from "./dataPost";
+import { usePathname, useRouter } from "next/navigation";
 
 interface Group {
-  title: string;
+  group: string;
 }
 
 const randomNames = [
-  "1",
-  "2",
-  "3",
-  "4",
-  "5",
-  "6",
-  "7",
-  "8",
-  "9",
-  "10",
-  "11",
-  "12",
-  "13",
-  "14",
-  "15",
-  "16",
-  "17",
-  "18",
-  "19",
+  "جوجه های جستجوگر",
+  "گربه‌ های بدبین",
+  "شکلات‌ خورها",
+  "پنگوئن‌ های پرسرعت",
+  "بادبادک‌ بازان",
+  "کلاغ‌ های کنجکاو",
+  "کیک‌ خوران خوش‌ تیپ",
+  "موش‌ های ماجراجو",
+  "خرگوش‌ های خنده‌دار",
+  "پیکان‌ های پرشتاب",
+  "قورباغه‌ های قدرتمند",
+  "قارچ های قصه‌گو",
+  "قلمرو عقاب ها",
+  "خاله ریزه ها",
+  "انتقام جویان",
+  "اعجوبه ها",
+  "انجمن صنفی مادربزرگ",
+  "کشنده های بی رحم",
+  "زنبورهای بولداگ",
+  "شیرهای خوش شانس",
+  "گریفیندور غیور",
+  "اسلیترین وحشی",
+  "ریونکلا های دانا",
+  "دالتون ها",
 ];
 
 const generateGroupNames = (count: number): Group[] => {
@@ -45,17 +52,25 @@ const generateGroupNames = (count: number): Group[] => {
     // Add name to used names set
     usedNames.add(name);
 
-    groupNames.push({ title: name });
+    groupNames.push({ group: name });
   }
 
   return groupNames;
 };
+interface PostDataResponse {
+  gameId: string;
+}
 
 const Page = () => {
   const [groupCount, setGroupCount] = useState(2);
   const [roundCount, setRoundCount] = useState(3);
   const [groups, setGroups] = useState<Group[]>(generateGroupNames(groupCount));
   const [gameTitle, setGameTitle] = useState("");
+  const [data, setData] = useState<PostDataResponse | null>(null);
+  const [error, setError] = useState<string | null>(null); // State for error message
+
+  const router = useRouter();
+  const pathname = usePathname();
 
   const handleGroupCountChange = (newCount: number) => {
     setGroupCount(newCount);
@@ -65,6 +80,33 @@ const Page = () => {
   useEffect(() => {
     console.log(groups); // Log the groups state whenever it changes
   }, [groups]);
+
+  const handleGoButtonClick = async () => {
+    if (!gameTitle.trim()) {
+      // Check if gameTitle is empty or contains only whitespace
+      setError("نام مسابقه رو انتخاب کن!");
+      return; // Exit early if gameTitle is empty
+    }
+    const postData = {
+      title: gameTitle,
+      groups: groups,
+      roundsSetting: {
+        totalRounds: roundCount,
+      },
+    };
+    console.log(postData);
+
+    try {
+      console.log(postData);
+      const responseData = await PostData(postData);
+      console.log("Response Data:", responseData);
+
+      // Use responseData directly to construct the URL for navigation
+      router.push(`${pathname}/${responseData.gameId}/groups`);
+    } catch (error) {
+      console.error("Failed to send data:", error);
+    }
+  };
 
   return (
     <main className="h-screen flex flex-col justify-center items-center text-white">
@@ -82,23 +124,25 @@ const Page = () => {
           <section className="flex flex-col gap-6 pt-14">
             <div className="flex flex-col gap-4">
               <p>نام مسابقه:</p>
-              <input
-                value={gameTitle} // Bind the input value to the state
-                onChange={(event) => {
-                  // Get the value entered by the user
-                  let inputValue = event.target.value;
 
-                  // Limit the input value to 20 characters
-                  if (inputValue.length > 20) {
-                    inputValue = inputValue.slice(0, 20); // Truncate the value to 20 characters
-                  }
-
-                  // Update the state with the limited input value
-                  setGameTitle(inputValue);
-                }}
-                placeholder="مسابقه شماره یک"
-                className="rounded-full bg-gray-400 placeholder:text-gray-600 placeholder:font-semibold py-2.5 placeholder:text-center text-center text-black"
-              />
+              <div className="flex flex-col gap-1.5 text-center">
+                <input
+                  required
+                  value={gameTitle}
+                  onChange={(event) => {
+                    let inputValue = event.target.value;
+                    if (inputValue.length > 20) {
+                      inputValue = inputValue.slice(0, 20);
+                    }
+                    setGameTitle(inputValue);
+                    setError(null); // Clear error when input changes
+                  }}
+                  placeholder="مسابقه شماره یک"
+                  className="rounded-full bg-gray-400 placeholder:text-gray-600 placeholder:font-semibold py-2.5 placeholder:text-center text-center text-black"
+                />
+                {error && <p className="text-red-500 text-xs">{error}</p>}{" "}
+                {/* Display error message */}
+              </div>
             </div>
             <div className="flex justify-between items-center text-lg">
               <p>تعداد گروه:</p>
@@ -173,7 +217,11 @@ const Page = () => {
               </div>
             </div>
 
-            <button className="flex justify-center" id="go">
+            <button
+              className="flex justify-center"
+              id="go"
+              onClick={handleGoButtonClick}
+            >
               <Image
                 alt="icon image"
                 src="/assets/letsGo.svg"

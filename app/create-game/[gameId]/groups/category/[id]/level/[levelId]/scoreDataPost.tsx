@@ -1,12 +1,12 @@
 "use server";
-export default async function PostData(postData: any) {
-  const res = await fetch("http://localhost:8000/api/v1/games/new-game", {
+export default async function PostScoreData(postScoreData: any) {
+  const res = await fetch("localhost:8000/api/v1/games/game", {
     method: "POST",
     mode: "cors",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify(postData),
+    body: JSON.stringify(postScoreData),
   });
   if (!res.ok) {
     throw new Error("Failed to send data");
