@@ -120,14 +120,25 @@ export default function Page() {
   };
 
   return (
-    <main className="p-4 flex justify-center flex-col items-center gap-16 h-full py-10">
+    <main className="p-4 flex justify-center flex-col items-center gap-12 h-full py-16 relative">
+      <div className="absolute top-5 flex justify-between w-full px-6 items-center lg:px-96">
+      <button onClick={() => router.back()}>
+            <Image
+              alt="icon image"
+              src="/assets/backIcon.svg"
+              width={100}
+              height={100}
+              className="w-full"
+            />
+          </button>
+      </div>
       <h1>
         <Image
           alt="icon image"
           src="/assets/category.svg"
           width={100}
           height={100}
-          className="w-full px-8"
+          className="w-full px-4"
         />
       </h1>
       <section className="flex flex-col gap-4 bg-white/70 rounded-3xl p-4">

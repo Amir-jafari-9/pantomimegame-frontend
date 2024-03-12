@@ -109,7 +109,18 @@ const Page = () => {
   };
 
   return (
-    <main className="h-screen flex flex-col justify-center items-center text-white">
+    <main className="h-screen flex flex-col justify-center items-center text-white my-10">
+      <div className="absolute top-5 flex justify-between w-full px-6 items-center lg:px-96">
+      <button onClick={() => router.back()}>
+            <Image
+              alt="icon image"
+              src="/assets/backIcon.svg"
+              width={100}
+              height={100}
+              className="w-full"
+            />
+          </button>
+      </div>
       <div className="relative h-max w-max flex justify-center">
         <section className="absolute -top-14">
           <Image

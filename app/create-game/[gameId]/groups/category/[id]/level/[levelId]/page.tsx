@@ -110,28 +110,6 @@ export default function Page({
             // Timer reached 0, show alert
             setTimerActive(false);
             setTimesUp(true);
-            const handleTimesUpButtonClick = async () => {
-              // Check if gameTitle is empty or contains only whitespace
-              const postScoreData = {
-                gameId: gameId,
-                wordId: data?.words.wordId,
-                restTimePoints: timeScore - 2,
-                totalCheat: 3 - cheat,
-                totalChange: 2 - clickCount,
-                guess: false,
-              };
-              console.log(postScoreData);
-
-              try {
-                console.log("score data", postScoreData);
-                const responseData = await PostScoreData(postScoreData);
-                console.log("Response Data:", responseData);
-
-                // Use responseData directly to construct the URL for navigation
-              } catch (error) {
-                console.error("Failed to send data:", error);
-              }
-            };
             return 0;
           }
           return prevTimer - 1;
@@ -309,7 +287,7 @@ export default function Page({
   };
 
   const handleCheatButtonClick = async () => {
-    console.log(cheat)
+    console.log(cheat);
     if (cheat === 1) {
       const postScoreData = {
         gameId: gameId,
@@ -341,6 +319,30 @@ export default function Page({
     }
 
     // Check if gameTitle is empty or contains only whitespace
+  };
+
+  const handleTimesUpButtonClick = async () => {
+    // Check if gameTitle is empty or contains only whitespace
+    const postScoreData = {
+      gameId: gameId,
+      wordId: data?.words.wordId,
+      restTimePoints: timeScore - 2,
+      totalCheat: 3 - cheat,
+      totalChange: 2 - clickCount,
+      guess: false,
+    };
+    console.log(postScoreData);
+
+    try {
+      console.log("score data", postScoreData);
+      const responseData = await PostScoreData(postScoreData);
+      console.log("Response Data:", responseData);
+
+      // Use responseData directly to construct the URL for navigation
+    } catch (error) {
+      console.error("Failed to send data:", error);
+    }
+    router.push(`/create-game/${gameId}/groups`);
   };
 
   const toggleMute = () => {
@@ -415,7 +417,7 @@ export default function Page({
                   className="w-full"
                 />
               </div>
-              <Link href={`/create-game/${gameId}/groups`}>
+              <button onClick={handleTimesUpButtonClick}>
                 <Image
                   alt="icon image"
                   src="/assets/againButton.svg"
@@ -423,7 +425,7 @@ export default function Page({
                   height={100}
                   className="w-full"
                 />
-              </Link>
+              </button>
             </section>
           </div>
         )}
@@ -534,7 +536,7 @@ export default function Page({
 
         {complete && (
           <div className="fixed inset-0 z-50 bg-black/80">
-            <section className="bg-[url('/assets/scoreContainer.svg')] bg-center h-full bg-no-repeat flex flex-col items-center justify-center text-center fixed left-[50%] top-[50%] z-50 max-w-lg translate-x-[-50%] translate-y-[-50%] sm:rounded-lg w-full lg:px-20 gap-12 ">
+            <section className="bg-[url('/assets/scoreContainer.svg')] bg-center h-full bg-no-repeat flex flex-col items-center justify-center text-center fixed left-[50%] top-[50%] z-50 max-w-lg translate-x-[-50%] translate-y-[-50%] sm:rounded-lg w-full lg:px-20 gap-12 sm:px-20">
               <Lottie
                 animationData={animationConfetti}
                 className="w-full h-[70%] -px-5 absolute top-0"
@@ -549,7 +551,7 @@ export default function Page({
                   className="w-full"
                 />
               </div>
-              <section className="w-full px-20 flex flex-col gap-10">
+              <section className="w-full px-[22%]  flex flex-col gap-10">
                 <div className="flex justify-between items-center w-full bg-[#15314C] overflow-visible h-4 ">
                   <p className="text-xl text-white text-semibold pr-2">
                     {" "}
@@ -635,17 +637,14 @@ export default function Page({
           )}
 
           <section className=" text-white/50 flex justify-center items-center">
-            {/* {timerActive && showFinishTimer && ( */}
-            <div className="flex items-center -ml-10">
-              {/* <button onClick={addTime} className="pl-3 text-sm">
-                +20s
-              </button> */}
-              <p className="text-4xl text-white font-semibold">
-                {formatTime(timer)}
-              </p>
-              <Lottie animationData={animationData} className="w-16 -px-5" />
-            </div>
-            {/* )} */}
+            {!counterActive && (
+              <div className="flex items-center -ml-10">
+                <p className="text-4xl text-white font-semibold">
+                  {formatTime(timer)}
+                </p>
+                <Lottie animationData={animationData} className="w-16 -px-5" />
+              </div>
+            )}
             {showFinishTimer && timer === 0 && <p>پایان</p>}
           </section>
         </div>
