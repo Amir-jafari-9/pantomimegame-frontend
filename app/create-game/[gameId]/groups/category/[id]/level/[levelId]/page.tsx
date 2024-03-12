@@ -110,6 +110,28 @@ export default function Page({
             // Timer reached 0, show alert
             setTimerActive(false);
             setTimesUp(true);
+            const handleTimesUpButtonClick = async () => {
+              // Check if gameTitle is empty or contains only whitespace
+              const postScoreData = {
+                gameId: gameId,
+                wordId: data?.words.wordId,
+                restTimePoints: timeScore - 2,
+                totalCheat: 3 - cheat,
+                totalChange: 2 - clickCount,
+                guess: false,
+              };
+              console.log(postScoreData);
+
+              try {
+                console.log("score data", postScoreData);
+                const responseData = await PostScoreData(postScoreData);
+                console.log("Response Data:", responseData);
+
+                // Use responseData directly to construct the URL for navigation
+              } catch (error) {
+                console.error("Failed to send data:", error);
+              }
+            };
             return 0;
           }
           return prevTimer - 1;
@@ -260,7 +282,10 @@ export default function Page({
     }
   };
 
-  const handleNoButtonClick = async () => {
+  const handlequitButtonClick = async () => {
+    setquitAsk(false);
+    setquit(true);
+    setTimerActive(false);
     // Check if gameTitle is empty or contains only whitespace
     const postScoreData = {
       gameId: gameId,
@@ -268,7 +293,7 @@ export default function Page({
       restTimePoints: timeScore - 2,
       totalCheat: 3 - cheat,
       totalChange: 2 - clickCount,
-      guess: true,
+      guess: false,
     };
     console.log(postScoreData);
 
@@ -284,6 +309,27 @@ export default function Page({
   };
 
   const handleCheatButtonClick = async () => {
+    console.log(cheat)
+    if (cheat === 1) {
+      const postScoreData = {
+        gameId: gameId,
+        wordId: data?.words.wordId,
+        restTimePoints: timeScore - 2,
+        totalCheat: 3 - cheat,
+        totalChange: 2 - clickCount,
+        guess: false,
+      };
+      console.log(postScoreData);
+      try {
+        console.log("score data", postScoreData);
+        const responseData = await PostScoreData(postScoreData);
+        console.log("Response Data:", responseData);
+
+        // Use responseData directly to construct the URL for navigation
+      } catch (error) {
+        console.error("Failed to send data:", error);
+      }
+    }
     setRedScreen(true);
     setTimeout(() => {
       setRedScreen(false);
@@ -295,48 +341,6 @@ export default function Page({
     }
 
     // Check if gameTitle is empty or contains only whitespace
-    const postScoreData = {
-      gameId: gameId,
-      wordId: data?.words.wordId,
-      restTimePoints: timeScore - 2,
-      totalCheat: 3 - cheat,
-      totalChange: 2 - clickCount,
-      guess: true,
-    };
-    console.log(postScoreData);
-
-    try {
-      console.log("score data", postScoreData);
-      const responseData = await PostScoreData(postScoreData);
-      console.log("Response Data:", responseData);
-
-      // Use responseData directly to construct the URL for navigation
-    } catch (error) {
-      console.error("Failed to send data:", error);
-    }
-  };
-
-  const handleTimesUpButtonClick = async () => {
-    // Check if gameTitle is empty or contains only whitespace
-    const postScoreData = {
-      gameId: gameId,
-      wordId: data?.words.wordId,
-      restTimePoints: timeScore - 2,
-      totalCheat: 3 - cheat,
-      totalChange: 2 - clickCount,
-      guess: true,
-    };
-    console.log(postScoreData);
-
-    try {
-      console.log("score data", postScoreData);
-      const responseData = await PostScoreData(postScoreData);
-      console.log("Response Data:", responseData);
-
-      // Use responseData directly to construct the URL for navigation
-    } catch (error) {
-      console.error("Failed to send data:", error);
-    }
   };
 
   const toggleMute = () => {
@@ -461,13 +465,7 @@ export default function Page({
                       className="w-full"
                     />
                   </button>
-                  <button
-                    onClick={() => {
-                      setquitAsk(false);
-                      setquit(true);
-                      setTimerActive(false);
-                    }}
-                  >
+                  <button onClick={handlequitButtonClick}>
                     <Image
                       alt="icon image"
                       src="/assets/yesButton.svg"

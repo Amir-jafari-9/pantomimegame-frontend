@@ -64,10 +64,15 @@ export default function Page({
     <main className="h-screen flex flex-col justify-center items-center text-white w-full overflow-hidden">
       <section className="bg-[url('/assets/groupContainer.svg')] bg-center h-[628px] w-[376px] bg-no-repeat flex flex-col justify-cente items-center relative pt-24 gap-3 px-10">
         <div className="bg-[url('/assets/ribbon.svg')] bg-center h-[66px] w-[190px] bg-no-repeat flex flex-col justify-center items-center absolute top-0">
-          <p className="pb-2 font-bold tracking-wider">
-            {" "}
-            دور {data?.currentRound} از {data?.totalRound}{" "}
-          </p>
+          {data?.currentRound &&
+          data?.totalRound &&
+          data.currentRound > data.totalRound ? (
+            <p className="pb-2 font-bold tracking-wider">نتایج</p>
+          ) : (
+            <p className="pb-2 font-bold tracking-wider">
+              دور {data?.currentRound} از {data?.totalRound}
+            </p>
+          )}
         </div>
 
         <section
@@ -77,30 +82,37 @@ export default function Page({
           {data?.allGroup.map((group, index) => (
             <div
               key={index}
-              className={`font-semibold relative rounded-full bg-gray-100 text-gray-800 flex flex-row justify-between px-5 py-1.5`}
+              className={`font-semibold relative rounded-full bg-gray-100 text-gray-800 flex flex-row justify-between px-5 py-2 ${
+                group.group === data.turn &&
+                data?.currentRound &&
+                data?.totalRound &&
+                data.currentRound <= data.totalRound
+                  ? "border-[3px] border-orange-600 text-orange-600 bg-orange-100"
+                  : ""
+              }`}
             >
               <p> {group.group} </p>
               <p> {group.score} </p>
               {/* Render cup image only for the group with the highest score */}
-              {index === highestScoreIndex && group.score !== 0 && (
+              {index === highestScoreIndex && data.currentRound !== 1 && (
                 <Image
                   alt="Cup image"
                   src="/assets/first-place.svg" // Update with your cup image path
                   width={32}
                   height={32}
-                  className="absolute -top-2 -right-5 w-12" // Adjust styling as needed
+                  className="absolute -top-2 -right-5 w-12 z-50" // Adjust styling as needed
                 />
               )}
-              {index === secondScoreIndex && group.score !== 0 && (
+              {index === secondScoreIndex && data.currentRound !== 1 && (
                 <Image
                   alt="Cup image"
                   src="/assets/second-place.svg" // Update with your cup image path
                   width={32}
                   height={32}
-                  className="absolute -top-2 -right-5 w-12" // Adjust styling as needed
+                  className="absolute -top-2 -right-5 w-12 z-20" // Adjust styling as needed
                 />
               )}
-              {index === thirdScoreIndex && group.score !== 0 && (
+              {index === thirdScoreIndex && data.currentRound !== 1 && (
                 <Image
                   alt="Cup image"
                   src="/assets/third-place.svg" // Update with your cup image path
@@ -113,30 +125,36 @@ export default function Page({
           ))}
         </section>
 
-        <div className="flex items-center justify-center gap-8">
-          <button onClick={() => router.push(`${pathname}/category`)}>
-            <Image
-              alt="icon image"
-              src="/assets/letsGo.svg"
-              width={100}
-              height={100}
-              className="w-32 h-max "
-            />
-          </button>
-          <button
-            onClick={() => {
-              setRules(true);
-            }}
-          >
-            <Image
-              alt="icon image"
-              src="/assets/rulesIcon.svg"
-              width={100}
-              height={100}
-              className="w-10 h-max"
-            />
-          </button>
-        </div>
+        {data?.currentRound &&
+        data?.totalRound &&
+        data.currentRound > data.totalRound ? (
+          <p className="pb-2 font-bold tracking-wider">نتایج</p>
+        ) : (
+          <div className="flex items-center justify-center gap-8">
+            <button onClick={() => router.push(`${pathname}/category`)}>
+              <Image
+                alt="icon image"
+                src="/assets/letsGo.svg"
+                width={100}
+                height={100}
+                className="w-32 h-max "
+              />
+            </button>
+            <button
+              onClick={() => {
+                setRules(true);
+              }}
+            >
+              <Image
+                alt="icon image"
+                src="/assets/rulesIcon.svg"
+                width={100}
+                height={100}
+                className="w-10 h-max"
+              />
+            </button>
+          </div>
+        )}
       </section>
 
       {rules && (
