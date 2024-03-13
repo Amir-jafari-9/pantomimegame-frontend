@@ -19,7 +19,7 @@ interface Group {
 
 interface ApiResponse {
   status: string;
-  allGroup: Group[];
+  allGroups: Group[];
   currentRound: number;
   totalRound: number;
   turn: string;
@@ -31,8 +31,8 @@ export default function Page({
   params: { gameId: string };
 }) {
   const [rules, setRules] = useState(false);
-  const [data, setData] = useState<ApiResponse | null>(null);
   const [quitAsk, setquitAsk] = useState(false);
+  const [data, setData] = useState<ApiResponse | null>(null);
 
   console.log("game id:", gameId);
   const router = useRouter();
@@ -42,8 +42,6 @@ export default function Page({
     const fetchDataAsync = async () => {
       try {
         const dataGet = await fetchGroupData(gameId);
-        console.log("game id:", gameId);
-        console.log("fetched data:", dataGet.data);
         setData(dataGet.data);
       } catch (error) {
         console.error("Failed to fetch data:", error);
@@ -54,7 +52,11 @@ export default function Page({
     fetchDataAsync();
   }, [gameId]);
 
-  const sortedGroups = data?.allGroup.slice().sort((a, b) => b.score - a.score);
+  console.log(data?.allGroups);
+
+  const sortedGroups = data?.allGroups
+    ?.slice()
+    .sort((a, b) => b.score - a.score);
   const highestFinishedScoreIndex = sortedGroups?.findIndex(
     (group) => group.score === (sortedGroups[0]?.score ?? 0)
   );
@@ -70,7 +72,7 @@ export default function Page({
   // ...
 
   // Find the highest, second-highest, and third-highest scores
-  const scores = data?.allGroup.map((group) => group.score) || [];
+  const scores = data?.allGroups?.map((group) => group.score) || [];
   const maxScore = Math.max(...scores);
   const secondMaxScore = Math.max(
     ...scores.filter((score) => score !== maxScore)
@@ -80,17 +82,17 @@ export default function Page({
   );
 
   // Find the index of the group with the highest score
-  const highestScoreIndex = data?.allGroup.findIndex(
+  const highestScoreIndex = data?.allGroups.findIndex(
     (group) => group.score === maxScore
   );
 
   // Find the index of the group with the second highest score
-  const secondScoreIndex = data?.allGroup.findIndex(
+  const secondScoreIndex = data?.allGroups.findIndex(
     (group) => group.score === secondMaxScore
   );
 
   // Find the index of the group with the third highest score
-  const thirdScoreIndex = data?.allGroup.findIndex(
+  const thirdScoreIndex = data?.allGroups.findIndex(
     (group) => group.score === thirdMaxScore
   );
 
@@ -100,7 +102,7 @@ export default function Page({
 
   return (
     <main className="h-screen flex flex-col justify-center items-center text-white w-full overflow-hidden">
-      <div className="absolute top-5 flex justify-between w-full px-6 items-center lg:px-96">
+      <div className="absolute top-5 flex justify-between w-full px-6 items-center lg:px-96 ">
         <button onClick={() => setquitAsk(true)}>
           <Image
             alt="icon image"
@@ -155,7 +157,7 @@ export default function Page({
             className="h-96 overflow-y-scroll w-full flex flex-col gap-3 p-4"
             style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
           >
-            {data?.allGroup.map((group, index) => (
+            {data?.allGroups.map((group, index) => (
               <div
                 key={index}
                 className={`font-semibold relative rounded-full bg-gray-100 text-gray-800 flex flex-row justify-between px-5 py-2 ${
@@ -163,12 +165,20 @@ export default function Page({
                   data?.currentRound &&
                   data?.totalRound &&
                   data.currentRound <= data.totalRound
-                    ? "border-[3px] border-orange-600 text-orange-600 bg-orange-100"
+                    ? "border-[3px] border-blue-950 text-blue-950 bg-blue-200"
                     : ""
                 }`}
               >
+                <Image
+                  alt="Cup image"
+                  src="/assets/highlight.svg" // Update with your cup image path
+                  width={32}
+                  height={32}
+                  className="absolute top-1 left-[0.3rem] w-4 z-50 opacity-50" // Adjust styling as needed
+                />
+
                 <p className="pr-3"> {group.group} </p>
-                <p> {group.score} </p>
+                <p className="font-bold"> {group.score} </p>
                 {/* Render cup image only for the group with the highest score */}
                 {index === highestScoreIndex && (
                   <Image
@@ -214,14 +224,24 @@ export default function Page({
                 key={index}
                 className={`font-semibold relative rounded-full bg-gray-100 text-gray-800 flex flex-row justify-between px-5 py-2 ${
                   index === highestFinishedScoreIndex
-                    ? "bg-[#ffbe52]"
+                    ? "bg-amber-400"
                     : index === thirdFinishedScoreIndex
-                    ? "bg-[#ffb08d]"
+                    ? "bg-red-200"
+                    : index === secondFinishedScoreIndex
+                    ? "bg-gray-400"
                     : ""
                 }`}
               >
+                <Image
+                  alt="Cup image"
+                  src="/assets/highlight.svg" // Update with your cup image path
+                  width={32}
+                  height={32}
+                  className="absolute top-1 left-[0.3rem] w-4 z-50 opacity-50" // Adjust styling as needed
+                />
+
                 <p className="pr-3"> {group.group} </p>
-                <p> {group.score} </p>
+                <p className="font-bold"> {group.score} </p>
                 {/* Render medal image for the group with the highest score */}
                 {index === highestFinishedScoreIndex && (
                   <Image

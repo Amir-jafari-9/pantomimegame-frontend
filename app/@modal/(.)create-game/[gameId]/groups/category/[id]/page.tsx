@@ -4,7 +4,7 @@ import { usePathname, useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import fetchData from "@/app/create-game/[gameId]/groups/category/[id]/level/[levelId]/dataFetch";
+import fetchCatgeoryData from "@/app/create-game/[gameId]/groups/category/[id]/categoryDataFetch";
 
 const Page = ({
   params: { id, gameId },
@@ -19,23 +19,23 @@ const Page = ({
     word: string;
     name: string;
   }
-  useEffect(() => {
-    const fetchDataAsync = async () => {
-      const dataGet = await fetchData(id, "1", gameId, "new");
-      setData(dataGet.data);
-    };
-
-    fetchDataAsync();
-  }, [id, gameId]);
-
-  const router = useRouter();
-  const pathname = usePathname();
-
   const levels = [
     { no: "1", title: "easy", icon: "/assets/level-easy.svg" },
     { no: "2", title: "medium", icon: "/assets/level-medium.svg" },
     { no: "3", title: "hard", icon: "/assets/level-hard.svg" },
   ];
+
+  useEffect(() => {
+    const fetchDataAsync = async () => {
+      const dataGet = await fetchCatgeoryData(id);
+      setData(dataGet);
+    };
+
+    fetchDataAsync();
+  }, [id]);
+
+  const router = useRouter();
+  const pathname = usePathname();
 
   return (
     <div>

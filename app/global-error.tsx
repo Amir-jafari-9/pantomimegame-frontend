@@ -10,7 +10,7 @@ export default function GlobalError({
   return (
     <html>
       <body>
-        <div className="flex flex-col justify-center items-center gap-4 text-xl font-semibold h-screen text-white">
+        <div className="flex flex-col justify-center items-center gap-4 text-xl font-semibold h-screen ">
           <h2> یه چیزی خراب شد! </h2>
           <button
             className="border border-black p-4 rounded-md"

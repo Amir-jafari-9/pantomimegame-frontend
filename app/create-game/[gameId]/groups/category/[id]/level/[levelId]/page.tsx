@@ -66,6 +66,7 @@ export default function Page({
     const fetchDataAsync = async () => {
       const status = "new";
       const dataGet = await fetchData(id, levelId, gameId, status);
+      console.log("leveeeeeel",levelId)
       console.log(dataGet);
       setData(dataGet.data);
     };
