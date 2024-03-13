@@ -15,10 +15,10 @@ export default function Error({
   }, [error])
  
   return (
-    <div className='flex flex-col justify-center items-center gap-4 text-xl font-semibold'>
+    <div className='flex flex-col justify-center items-center gap-4 text-xl font-semibold h-screen text-white'>
       <h2>  یه چیزی خراب شد! </h2>
       <button
-      className='border border-black p-4'
+      className='border border-black p-4 rounded-md'
         onClick={
           // Attempt to recover by trying to re-render the segment
           () => reset()

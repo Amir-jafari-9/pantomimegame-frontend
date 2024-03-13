@@ -68,6 +68,7 @@ const Page = () => {
   const [gameTitle, setGameTitle] = useState("");
   const [data, setData] = useState<PostDataResponse | null>(null);
   const [error, setError] = useState<string | null>(null); // State for error message
+  const [nameConflictError, setNameConflictError] = useState<string | null>(null); // State for error message
 
   const router = useRouter();
   const pathname = usePathname();
@@ -99,27 +100,28 @@ const Page = () => {
     try {
       console.log(postData);
       const responseData = await PostData(postData);
+      router.push(`${pathname}/${responseData.gameId}/groups`);
       console.log("Response Data:", responseData);
 
       // Use responseData directly to construct the URL for navigation
-      router.push(`${pathname}/${responseData.gameId}/groups`);
     } catch (error) {
       console.error("Failed to send data:", error);
+      setNameConflictError("نام تکراریه!")
     }
   };
 
   return (
     <main className="h-screen flex flex-col justify-center items-center text-white my-10">
       <div className="absolute top-5 flex justify-between w-full px-6 items-center lg:px-96">
-      <button onClick={() => router.back()}>
-            <Image
-              alt="icon image"
-              src="/assets/backIcon.svg"
-              width={100}
-              height={100}
-              className="w-full"
-            />
-          </button>
+        <button onClick={() => router.back()}>
+          <Image
+            alt="icon image"
+            src="/assets/backIcon.svg"
+            width={100}
+            height={100}
+            className="w-full"
+          />
+        </button>
       </div>
       <div className="relative h-max w-max flex justify-center">
         <section className="absolute -top-14">
@@ -147,11 +149,13 @@ const Page = () => {
                     }
                     setGameTitle(inputValue);
                     setError(null); // Clear error when input changes
+                    setNameConflictError(null)
                   }}
                   placeholder="مسابقه شماره یک"
                   className="rounded-full bg-gray-400 placeholder:text-gray-600 placeholder:font-semibold py-2.5 placeholder:text-center text-center text-black"
                 />
                 {error && <p className="text-red-500 text-xs">{error}</p>}{" "}
+                {nameConflictError && <p className="text-red-500 text-xs">{nameConflictError}</p>}{" "}
                 {/* Display error message */}
               </div>
             </div>

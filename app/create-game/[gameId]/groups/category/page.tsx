@@ -68,8 +68,8 @@ export default function Page() {
     },
     {
       id: "TAC",
-      title: "فعالیت",
-      icon: "/assets/activity.png",
+      title: "عمومی",
+      icon: "/assets/general.png",
     },
     {
       id: "TM",

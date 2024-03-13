@@ -66,6 +66,7 @@ export default function Page({
     const fetchDataAsync = async () => {
       const status = "new";
       const dataGet = await fetchData(id, levelId, gameId, status);
+      console.log(dataGet)
       setData(dataGet.data);
     };
 
@@ -253,6 +254,7 @@ export default function Page({
       console.log("score data", postScoreData);
       const responseData = await PostScoreData(postScoreData);
       console.log("Response Data:", responseData);
+      console.log(data?.words.wordId)
 
       // Use responseData directly to construct the URL for navigation
     } catch (error) {

@@ -55,15 +55,48 @@ export default function Page({
   }, [gameId]);
 
   const sortedGroups = data?.allGroup.slice().sort((a, b) => b.score - a.score);
-  const highestScoreIndex = sortedGroups?.findIndex(
+  const highestFinishedScoreIndex = sortedGroups?.findIndex(
     (group) => group.score === (sortedGroups[0]?.score ?? 0)
   );
-  const secondScoreIndex = sortedGroups?.findIndex(
+  const secondFinishedScoreIndex = sortedGroups?.findIndex(
     (group) => group.score === (sortedGroups[1]?.score ?? 0)
   );
-  const thirdScoreIndex = sortedGroups?.findIndex(
+  const thirdFinishedScoreIndex = sortedGroups?.findIndex(
     (group) => group.score === (sortedGroups[2]?.score ?? 0)
   );
+
+  // ...
+
+  // ...
+
+  // Find the highest, second-highest, and third-highest scores
+  const scores = data?.allGroup.map((group) => group.score) || [];
+  const maxScore = Math.max(...scores);
+  const secondMaxScore = Math.max(
+    ...scores.filter((score) => score !== maxScore)
+  );
+  const thirdMaxScore = Math.max(
+    ...scores.filter((score) => score !== maxScore && score !== secondMaxScore)
+  );
+
+  // Find the index of the group with the highest score
+  const highestScoreIndex = data?.allGroup.findIndex(
+    (group) => group.score === maxScore
+  );
+
+  // Find the index of the group with the second highest score
+  const secondScoreIndex = data?.allGroup.findIndex(
+    (group) => group.score === secondMaxScore
+  );
+
+  // Find the index of the group with the third highest score
+  const thirdScoreIndex = data?.allGroup.findIndex(
+    (group) => group.score === thirdMaxScore
+  );
+
+  // ...
+
+  // ...
 
   return (
     <main className="h-screen flex flex-col justify-center items-center text-white w-full overflow-hidden">
@@ -117,7 +150,7 @@ export default function Page({
           )}
         </div>
 
-        {data?.status === "finished" ? (
+        {data?.status !== "finished" ? (
           <section
             className="h-96 overflow-y-scroll w-full flex flex-col gap-3 p-4"
             style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
@@ -126,7 +159,7 @@ export default function Page({
               <div
                 key={index}
                 className={`font-semibold relative rounded-full bg-gray-100 text-gray-800 flex flex-row justify-between px-5 py-2 ${
-                  group.group === data.turn &&
+                  group.group === data?.turn &&
                   data?.currentRound &&
                   data?.totalRound &&
                   data.currentRound <= data.totalRound
@@ -180,17 +213,17 @@ export default function Page({
               <div
                 key={index}
                 className={`font-semibold relative rounded-full bg-gray-100 text-gray-800 flex flex-row justify-between px-5 py-2 ${
-                  index === highestScoreIndex
-                    ? "bg-[#FFBE52]"
-                    : index === thirdScoreIndex
-                    ? "bg-[#FFB08D]"
+                  index === highestFinishedScoreIndex
+                    ? "bg-[rgb(255,190,82)]"
+                    : index === thirdFinishedScoreIndex
+                    ? "bg-[rgb(255,176,141)]"
                     : ""
                 }`}
               >
                 <p className="pr-3"> {group.group} </p>
                 <p> {group.score} </p>
                 {/* Render medal image for the group with the highest score */}
-                {index === highestScoreIndex && (
+                {index === highestFinishedScoreIndex && (
                   <Image
                     alt="Cup image"
                     src="/assets/gold-medal.svg" // Update with your cup image path
@@ -199,7 +232,7 @@ export default function Page({
                     className="absolute -top-2 -right-4 w-12 z-50" // Adjust styling as needed
                   />
                 )}
-                {index === secondScoreIndex && (
+                {index === secondFinishedScoreIndex && (
                   <Image
                     alt="Cup image"
                     src="/assets/silver-medal.svg" // Update with your cup image path
@@ -208,7 +241,7 @@ export default function Page({
                     className="absolute -top-2 -right-4 w-12 z-20" // Adjust styling as needed
                   />
                 )}
-                {index === thirdScoreIndex && (
+                {index === thirdFinishedScoreIndex && (
                   <Image
                     alt="Cup image"
                     src="/assets/bronze-medal.svg" // Update with your cup image path
@@ -223,26 +256,15 @@ export default function Page({
         )}
 
         {data?.status === "finished" ? (
-          <div className="flex items-center justify-center gap-4">
-            <button onClick={() => router.push("/")}>
-              <Image
-                alt="icon image"
-                src="/assets/playAgain.svg"
-                width={100}
-                height={100}
-                className="w-28 h-max "
-              />
-            </button>
-            <button onClick={() => router.push("/")}>
-              <Image
-                alt="icon image"
-                src="/assets/goOut.svg"
-                width={100}
-                height={100}
-                className="w-28 h-max"
-              />
-            </button>
-          </div>
+          <button onClick={() => router.push("/")}>
+            <Image
+              alt="icon image"
+              src="/assets/playAgain.svg"
+              width={100}
+              height={100}
+              className="w-full h-max "
+            />
+          </button>
         ) : (
           <div className="flex items-center justify-center gap-8">
             <button onClick={() => router.push(`${pathname}/category`)}>
