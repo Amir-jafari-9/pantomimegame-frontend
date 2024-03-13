@@ -66,7 +66,7 @@ export default function Page({
     const fetchDataAsync = async () => {
       const status = "new";
       const dataGet = await fetchData(id, levelId, gameId, status);
-      console.log(dataGet)
+      console.log(dataGet);
       setData(dataGet.data);
     };
 
@@ -122,37 +122,43 @@ export default function Page({
 
     // Calculate timeScore based on remaining time
     const timeRemaining = timer;
-    if (timeRemaining <= 0) {
-      setTimeScore(0);
-    } else if (timeRemaining <= 15) {
-      setTimeScore(2);
-    } else if (timeRemaining <= 30) {
-      setTimeScore(4);
-    } else if (timeRemaining <= 45) {
-      setTimeScore(6);
-    } else if (timeRemaining <= 60) {
-      setTimeScore(8);
-    } else if (timeRemaining <= 75) {
-      setTimeScore(10);
-    } else if (timeRemaining <= 90) {
-      setTimeScore(12);
-    } else if (timeRemaining <= 105) {
-      setTimeScore(14);
-    } else if (timeRemaining <= 120) {
-      setTimeScore(16);
-    } else if (timeRemaining <= 135) {
-      setTimeScore(20);
-    } else if (timeRemaining <= 150) {
-      setTimeScore(22);
-    } else if (timeRemaining <= 165) {
-      setTimeScore(24);
+    if (levelId !== "4") {
+      const timeRemaining = timer;
+      if (timeRemaining <= 0) {
+        setTimeScore(0);
+      } else if (timeRemaining <= 15) {
+        setTimeScore(2);
+      } else if (timeRemaining <= 30) {
+        setTimeScore(4);
+      } else if (timeRemaining <= 45) {
+        setTimeScore(6);
+      } else if (timeRemaining <= 60) {
+        setTimeScore(8);
+      } else if (timeRemaining <= 75) {
+        setTimeScore(10);
+      } else if (timeRemaining <= 90) {
+        setTimeScore(12);
+      } else if (timeRemaining <= 105) {
+        setTimeScore(14);
+      } else if (timeRemaining <= 120) {
+        setTimeScore(16);
+      } else if (timeRemaining <= 135) {
+        setTimeScore(20);
+      } else if (timeRemaining <= 150) {
+        setTimeScore(22);
+      } else if (timeRemaining <= 165) {
+        setTimeScore(24);
+      } else {
+        setTimeScore(26);
+      }
     } else {
-      setTimeScore(26);
+      // Set timeScore to zero if levelId is equal to 4
+      setTimeScore(2);
     }
-
     return () => {
       if (interval) clearInterval(interval);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [timer, timerActive]);
 
   const formatTime = (time: number) => {
@@ -254,7 +260,7 @@ export default function Page({
       console.log("score data", postScoreData);
       const responseData = await PostScoreData(postScoreData);
       console.log("Response Data:", responseData);
-      console.log(data?.words.wordId)
+      console.log(data?.words.wordId);
 
       // Use responseData directly to construct the URL for navigation
     } catch (error) {
@@ -575,24 +581,40 @@ export default function Page({
                     تعویض کلمه
                   </p>
                 </div>
-                <div className="flex justify-between items-center w-full bg-[#15314C] overflow-visible h-4 ">
-                  <p className="text-xl text-white text-semibold pr-2">
-                    زمان اضافه
-                  </p>
-                  <div className="pl-2">
-                    <div className="bg-[url('/assets/greenContainer.svg')] bg-center h-12 bg-no-repeat w-12 flex justify-center items-center text-white text-semibold text-xl">
-                      {timeScore - 2}
+                {levelId !== "4" && (
+                  <div className="flex justify-between items-center w-full bg-[#15314C] overflow-visible h-4 ">
+                    <p className="text-xl text-white text-semibold pr-2">
+                      زمان اضافه
+                    </p>
+                    <div className="pl-2">
+                      <div className="bg-[url('/assets/greenContainer.svg')] bg-center h-12 bg-no-repeat w-12 flex justify-center items-center text-white text-semibold text-xl">
+                        {timeScore - 2}
+                      </div>
                     </div>
                   </div>
-                </div>
-                <div className="flex justify-between items-center w-full bg-[#15314C] overflow-visible h-4 ">
-                  <div className="pr-2">
-                    <div className="bg-[url('/assets/redContainer.svg')] bg-center h-12 bg-no-repeat w-12 flex justify-center items-center text-white text-semibold text-xl">
-                      {3 - cheat}
+                )}
+                {levelId !== "4" ? (
+                  <div className="flex justify-between items-center w-full bg-[#15314C] overflow-visible h-4 ">
+                    <div className="pr-2">
+                      <div className="bg-[url('/assets/redContainer.svg')] bg-center h-12 bg-no-repeat w-12 flex justify-center items-center text-white text-semibold text-xl">
+                        {3 - cheat}
+                      </div>
+                    </div>
+                    <p className="text-xl text-white text-semibold pl-2">
+                      {" "}
+                      خطا{" "}
+                    </p>
+                  </div>
+                ) : (
+                  <div className="flex justify-between items-center w-full bg-[#15314C] overflow-visible h-4 ">
+                    <p className="text-xl text-white text-semibold pl-2">خطا</p>
+                    <div className="pr-2">
+                      <div className="bg-[url('/assets/redContainer.svg')] bg-center h-12 bg-no-repeat w-12 flex justify-center items-center text-white text-semibold text-xl">
+                        {3 - cheat}
+                      </div>
                     </div>
                   </div>
-                  <p className="text-xl text-white text-semibold pl-2"> خطا </p>
-                </div>
+                )}
               </section>
               <div className="bg-[#203547] border-2 border-[#B1B8BF] p-2 rounded-3xl flex justify-between w-[65%] px-5">
                 <p className="text-white text-semibold text-lg">

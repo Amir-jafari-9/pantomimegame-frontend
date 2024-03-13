@@ -214,9 +214,9 @@ export default function Page({
                 key={index}
                 className={`font-semibold relative rounded-full bg-gray-100 text-gray-800 flex flex-row justify-between px-5 py-2 ${
                   index === highestFinishedScoreIndex
-                    ? "bg-[rgb(255,190,82)]"
+                    ? "bg-[#ffbe52]"
                     : index === thirdFinishedScoreIndex
-                    ? "bg-[rgb(255,176,141)]"
+                    ? "bg-[#ffb08d]"
                     : ""
                 }`}
               >

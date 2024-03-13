@@ -3,6 +3,8 @@ import Image from "next/image";
 import React, { useEffect, useState } from "react";
 import PostData from "./dataPost";
 import { usePathname, useRouter } from "next/navigation";
+import Lottie from "lottie-react";
+import animationData from "@/public/assets/Animationloading.json"; // Import your JSON file
 
 interface Group {
   group: string;
@@ -62,13 +64,16 @@ interface PostDataResponse {
 }
 
 const Page = () => {
+  const [loading, setLoading] = useState(false); // State for loading state
   const [groupCount, setGroupCount] = useState(2);
   const [roundCount, setRoundCount] = useState(3);
   const [groups, setGroups] = useState<Group[]>(generateGroupNames(groupCount));
   const [gameTitle, setGameTitle] = useState("");
   const [data, setData] = useState<PostDataResponse | null>(null);
   const [error, setError] = useState<string | null>(null); // State for error message
-  const [nameConflictError, setNameConflictError] = useState<string | null>(null); // State for error message
+  const [nameConflictError, setNameConflictError] = useState<string | null>(
+    null
+  ); // State for error message
 
   const router = useRouter();
   const pathname = usePathname();
@@ -99,19 +104,28 @@ const Page = () => {
 
     try {
       console.log(postData);
+      setLoading(true);
       const responseData = await PostData(postData);
       router.push(`${pathname}/${responseData.gameId}/groups`);
       console.log("Response Data:", responseData);
 
       // Use responseData directly to construct the URL for navigation
     } catch (error) {
+      setLoading(false);
       console.error("Failed to send data:", error);
-      setNameConflictError("نام تکراریه!")
+      setNameConflictError("نام تکراریه!");
     }
   };
 
   return (
     <main className="h-screen flex flex-col justify-center items-center text-white my-10">
+      {loading && (
+        <div className="fixed inset-0 z-50 bg-black/50">
+          <div className="flex flex-col items-center justify-center text-center fixed left-[50%] top-[50%] z-50 max-w-lg translate-x-[-50%] translate-y-[-50%]  sm:rounded-lg w-full h-full">
+            <Lottie animationData={animationData} className="w-full px-10" />
+          </div>
+        </div>
+      )}
       <div className="absolute top-5 flex justify-between w-full px-6 items-center lg:px-96">
         <button onClick={() => router.back()}>
           <Image
@@ -149,13 +163,15 @@ const Page = () => {
                     }
                     setGameTitle(inputValue);
                     setError(null); // Clear error when input changes
-                    setNameConflictError(null)
+                    setNameConflictError(null);
                   }}
                   placeholder="مسابقه شماره یک"
                   className="rounded-full bg-gray-400 placeholder:text-gray-600 placeholder:font-semibold py-2.5 placeholder:text-center text-center text-black"
                 />
                 {error && <p className="text-red-500 text-xs">{error}</p>}{" "}
-                {nameConflictError && <p className="text-red-500 text-xs">{nameConflictError}</p>}{" "}
+                {nameConflictError && (
+                  <p className="text-red-500 text-xs">{nameConflictError}</p>
+                )}{" "}
                 {/* Display error message */}
               </div>
             </div>

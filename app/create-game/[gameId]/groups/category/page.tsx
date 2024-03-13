@@ -5,8 +5,6 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 
-
-
 export default function Page() {
   const router = useRouter();
   const pathname = usePathname();
@@ -122,15 +120,15 @@ export default function Page() {
   return (
     <main className="p-4 flex justify-center flex-col items-center gap-12 h-full py-16 relative">
       <div className="absolute top-5 flex justify-between w-full px-6 items-center lg:px-96">
-      <button onClick={() => router.back()}>
-            <Image
-              alt="icon image"
-              src="/assets/backIcon.svg"
-              width={100}
-              height={100}
-              className="w-full"
-            />
-          </button>
+        <button onClick={() => router.back()}>
+          <Image
+            alt="icon image"
+            src="/assets/backIcon.svg"
+            width={100}
+            height={100}
+            className="w-full"
+          />
+        </button>
       </div>
       <h1>
         <Image
@@ -158,7 +156,7 @@ export default function Page() {
             <p className="text-sm font-medium lg:text-base"> تصادفی </p>
           </Link>
           <Link
-            href={"/category/tg/level/4"}
+            href={`${pathname}/TG/level/4`}
             className="bg-gray-50 px-4 py-2.5 rounded-2xl  w-full flex justify-center gap-4 items-center shadow-[0_10px_15px_-3px_rgba(243,183,29,0.2),0_4px_6px_-4px_rgba(243,183,29,0.2)] border border-yellow-400 hover:scale-105 transition-transform active:translate-y-1"
           >
             <Image
