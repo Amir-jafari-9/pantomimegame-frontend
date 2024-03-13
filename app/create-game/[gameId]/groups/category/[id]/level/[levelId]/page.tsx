@@ -66,7 +66,7 @@ export default function Page({
     const fetchDataAsync = async () => {
       const status = "new";
       const dataGet = await fetchData(id, levelId, gameId, status);
-      console.log("leveeeeeel",levelId)
+      console.log("leveeeeeel", levelId);
       console.log(dataGet);
       setData(dataGet.data);
     };
@@ -92,7 +92,7 @@ export default function Page({
     setTimerActive(true);
     let initialTime = 0;
     if (levelId === "1") {
-      initialTime = 50;
+      initialTime = 12;
     } else if (levelId === "2") {
       initialTime = 80;
     } else if (levelId === "3") {
@@ -210,38 +210,21 @@ export default function Page({
     return savedMutedState === "true";
   });
 
-  useEffect(() => {
-    const audio = new Audio("/music/music.mp3");
-    audio.loop = true;
-    audio.muted = muted;
-    audio.play();
-    Cookies.set("musicMuted", muted.toString());
-    const savedMutedState = Cookies.get("musicMuted");
-    if (savedMutedState) {
-      setMuted(savedMutedState === "true");
-    }
-
-    return () => {
-      audio.pause();
-    };
-  }, [muted]);
-
   // useEffect(() => {
-  //   // Save muted state to a cookie
+  //   const audio = new Audio("/music/music.mp3");
+  //   audio.loop = true;
+  //   audio.muted = muted;
+  //   audio.play();
   //   Cookies.set("musicMuted", muted.toString());
   //   const savedMutedState = Cookies.get("musicMuted");
   //   if (savedMutedState) {
   //     setMuted(savedMutedState === "true");
   //   }
-  // }, [muted]);
 
-  // useEffect(() => {
-  //   // Check if there's a muted state saved in the cookie
-  //   const savedMutedState = Cookies.get("musicMuted");
-  //   if (savedMutedState) {
-  //     setMuted(savedMutedState === "true");
-  //   }
-  // }, [muted]); // Include muted in the dependency array
+  //   return () => {
+  //     audio.pause();
+  //   };
+  // }, [muted]);
 
   const handleYesButtonClick = async () => {
     setComplete(true);
@@ -335,7 +318,7 @@ export default function Page({
     const postScoreData = {
       gameId: gameId,
       wordId: data?.words.wordId,
-      restTimePoints: timeScore - 2,
+      restTimePoints: timeScore,
       totalCheat: 3 - cheat,
       totalChange: 2 - clickCount,
       guess: false,
