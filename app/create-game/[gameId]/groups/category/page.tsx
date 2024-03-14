@@ -26,8 +26,8 @@ export default function Page() {
     },
     {
       id: "TE",
-      title: "محیط",
-      icon: "/assets/environment.png",
+      title: "خوراکی",
+      icon: "/assets/food-food.png",
     },
     {
       id: "TCH",
