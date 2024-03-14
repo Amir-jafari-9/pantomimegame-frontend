@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import PostData from "./dataPost";
 import { usePathname, useRouter } from "next/navigation";
 import Lottie from "lottie-react";
-import animationData from "@/public/assets/Animationloading.json"; // Import your JSON file
+import animationData from "@/public/assets/animationLoading.json"; // Import your JSON file
 
 interface Group {
   group: string;
