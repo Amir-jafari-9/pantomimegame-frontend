@@ -56,10 +56,6 @@ export default function Page({
     return initialTime;
   });
 
-  const addTime = () => {
-    setTimer((prevTimer) => prevTimer + 20); // Add 20 seconds to timer
-  };
-
   const router = useRouter();
 
   useEffect(() => {
@@ -92,7 +88,7 @@ export default function Page({
     setTimerActive(true);
     let initialTime = 0;
     if (levelId === "1") {
-      initialTime = 12;
+      initialTime = 50;
     } else if (levelId === "2") {
       initialTime = 80;
     } else if (levelId === "3") {
@@ -125,15 +121,23 @@ export default function Page({
     const timeRemaining = timer;
     if (levelId !== "4") {
       const timeRemaining = timer;
-      if (timeRemaining <= 10) {
+      if (timeRemaining <= 1) {
         // Create a new Audio object for the beep sound
-        const beepAudio = new Audio("/music/music2.mp3");
+        const beepAudio = new Audio("/music/RING.mp3");
         // Play the beep sound
         beepAudio.play();
         // Stop the beep sound after 10 seconds
         setTimeout(() => {
           beepAudio.pause();
-        }, 10000); // 10000 milliseconds = 10 seconds
+        }, 3000); // 10000 milliseconds = 10 seconds
+      } else if (timeRemaining <= 10) {
+        const beepAudio = new Audio("/music/10-seconds-count-down.mp3");
+        // Play the beep sound
+        beepAudio.play();
+        // Stop the beep sound after 10 seconds
+        setTimeout(() => {
+          beepAudio.pause();
+        }, 1000); // 10000 milliseconds = 10 seconds
       }
       if (timeRemaining <= 15) {
         setTimeScore(0);
@@ -221,7 +225,7 @@ export default function Page({
   useEffect(() => {
     const audio = new Audio("/music/music2.mp3");
     audio.loop = true;
-    audio.volume = 0.5;
+    audio.volume = 0.1;
     audio.muted = muted;
     audio.play();
     Cookies.set("musicMuted", muted.toString());
@@ -248,6 +252,13 @@ export default function Page({
       guess: true,
     };
     console.log(postScoreData);
+    const beepAudio = new Audio("/music/anime-wow-sound-effect.mp3");
+    // Play the beep sound
+    beepAudio.play();
+    // Stop the beep sound after 10 seconds
+    setTimeout(() => {
+      beepAudio.pause();
+    }, 5000); // 10000 milliseconds = 10 seconds
 
     try {
       console.log("score data", postScoreData);
@@ -265,6 +276,7 @@ export default function Page({
     setquitAsk(false);
     setquit(true);
     setTimerActive(false);
+
     // Check if gameTitle is empty or contains only whitespace
     const postScoreData = {
       gameId: gameId,
@@ -285,6 +297,19 @@ export default function Page({
     } catch (error) {
       console.error("Failed to send data:", error);
     }
+  };
+  const handleAskquitButtonClick = async () => {
+    setquitAsk(true);
+    setTimerActive(false);
+    const beepAudio = new Audio(
+      "/music/they_ask_you_how_you_are_and_you_just_have_to_say_that_youre_fine.mp3"
+    );
+    // Play the beep sound
+    beepAudio.play();
+    // Stop the beep sound after 10 seconds
+    setTimeout(() => {
+      beepAudio.pause();
+    }, 7000); // 10000 milliseconds = 10 seconds
   };
 
   const handleCheatButtonClick = async () => {
@@ -308,25 +333,25 @@ export default function Page({
       } catch (error) {
         console.error("Failed to send data:", error);
       }
-      const beepAudio = new Audio("/music/music2.mp3");
+      const beepAudio = new Audio("/music/eww-brother-eww.mp3");
       // Play the beep sound
       beepAudio.play();
       // Stop the beep sound after 10 seconds
       setTimeout(() => {
         beepAudio.pause();
-      }, 1000); // 10000 milliseconds = 10 seconds
+      }, 11000); // 10000 milliseconds = 10 seconds
     }
     setRedScreen(true);
     setTimeout(() => {
       setRedScreen(false);
-    }, 200);
-    const beepAudio = new Audio("/music/music2.mp3");
+    }, 100);
+    const beepAudio = new Audio("/music/wrong-answer-sound-effect.mp3");
     // Play the beep sound
     beepAudio.play();
     // Stop the beep sound after 10 seconds
     setTimeout(() => {
       beepAudio.pause();
-    }, 10000); // 10000 milliseconds = 10 seconds
+    }, 1000); // 10000 milliseconds = 10 seconds
     // Use the functional form of setCheat to ensure you're working with the most up-to-date value
     setCheat((prevCheat) => prevCheat - 1);
     if (cheat - 1 === 0) {
@@ -358,6 +383,7 @@ export default function Page({
       console.error("Failed to send data:", error);
     }
     router.push(`/create-game/${gameId}/groups`);
+    router.refresh();
   };
 
   const toggleMute = () => {
@@ -368,7 +394,7 @@ export default function Page({
     <>
       <main className=" container relative flex flex-col px-5 justify-center h-screen items-center  gap-16">
         <section className="absolute top-5 flex justify-between w-full px-6 items-center lg:px-96">
-          <button onClick={() => setquitAsk(true)}>
+          <button onClick={handleAskquitButtonClick}>
             <Image
               alt="icon image"
               src="/assets/backIcon.svg"
@@ -456,7 +482,12 @@ export default function Page({
                   className="w-full"
                 />
               </div>
-              <Link href={`/create-game/${gameId}/groups`}>
+              <button
+                onClick={() => {
+                  router.push(`/create-game/${gameId}/groups`);
+                  router.refresh();
+                }}
+              >
                 <Image
                   alt="icon image"
                   src="/assets/againButton.svg"
@@ -464,7 +495,7 @@ export default function Page({
                   height={100}
                   className="w-full"
                 />
-              </Link>
+              </button>
             </section>
           </div>
         )}
@@ -508,7 +539,12 @@ export default function Page({
                   className="w-full"
                 />
               </div>
-              <Link href={`/create-game/${gameId}/groups`}>
+              <button
+                onClick={() => {
+                  router.push(`/create-game/${gameId}/groups`);
+                  router.refresh();
+                }}
+              >
                 <Image
                   alt="icon image"
                   src="/assets/againButton.svg"
@@ -516,7 +552,7 @@ export default function Page({
                   height={100}
                   className="w-full"
                 />
-              </Link>
+              </button>
             </section>
           </div>
         )}
@@ -633,7 +669,12 @@ export default function Page({
                   </p>
                 )}
               </div>
-              <Link href={`/create-game/${gameId}/groups`}>
+              <button
+                onClick={() => {
+                  router.push(`/create-game/${gameId}/groups`);
+                  router.refresh();
+                }}
+              >
                 <Image
                   alt="icon image"
                   src="/assets/againButton.svg"
@@ -641,7 +682,7 @@ export default function Page({
                   height={100}
                   className="w-full"
                 />
-              </Link>
+              </button>
             </section>
           </div>
         )}
@@ -698,7 +739,7 @@ export default function Page({
         <section className="flex">
           {showFinishTimer ? (
             <div className="flex items-center gap-1">
-              <button onClick={() => setquitAsk(true)}>
+              <button onClick={handleAskquitButtonClick}>
                 <Image
                   alt="icon image"
                   src="/assets/noIcon.svg"

@@ -2,7 +2,7 @@
 export default async function fetchGroupData(gameId: string) {
   console.log("fetch test", gameId);
   const res = await fetch(
-    `http://localhost:8000/api/v1/games/game?gameId=${gameId}`,
+    `https://api.fnvr.ir/api/v1/games/game?gameId=${gameId}`,
     {
       method: "GET",
       mode: "cors",

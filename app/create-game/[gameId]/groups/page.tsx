@@ -34,8 +34,6 @@ export default function Page({
   const [quitAsk, setquitAsk] = useState(false);
   const [data, setData] = useState<ApiResponse | null>(null);
 
-  
-
   console.log("game id:", gameId);
   const router = useRouter();
   const pathname = usePathname();
@@ -54,6 +52,18 @@ export default function Page({
 
     fetchDataAsync();
   }, [gameId]);
+
+  useEffect(() => {
+    if (data?.status === "finished") {
+      const beepAudio = new Audio("/music/meme-de-creditos-finales.mp3");
+      // Play the beep sound
+      beepAudio.play();
+      // Stop the beep sound after 10 seconds
+      setTimeout(() => {
+        beepAudio.pause();
+      }, 7000); // 10000 milliseconds = 10 seconds
+    }
+  }, [data?.status]);
 
   console.log(data?.allGroups);
 
@@ -164,9 +174,8 @@ export default function Page({
               <div
                 key={index}
                 className={`font-semibold relative rounded-full bg-gray-100 text-gray-800 flex flex-row justify-between px-5 py-2 ${
-                  group.group == data?.turn
-                    ? "border-[3px] border-blue-950 text-blue-950 bg-blue-300"
-                    : ""
+                  group.group == data?.turn &&
+                  " bg-blue-400 border-[3px] border-blue-950 text-blue-950 "
                 }`}
               >
                 <Image
@@ -224,7 +233,7 @@ export default function Page({
                 key={index}
                 className={`font-semibold relative rounded-full bg-gray-100 text-gray-800 flex flex-row justify-between px-5 py-2 ${
                   index === highestFinishedScoreIndex
-                    ? "bg-amber-400"
+                    ? "bg-amber-300"
                     : index === thirdFinishedScoreIndex
                     ? "bg-red-200"
                     : index === secondFinishedScoreIndex
@@ -289,6 +298,7 @@ export default function Page({
           <div className="flex items-center justify-center gap-8">
             <button
               onClick={() => {
+                router.refresh();
                 router.push(`${pathname}/category`);
               }}
             >

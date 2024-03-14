@@ -7,8 +7,9 @@ export default async function fetchData(
 ) {
   const res = await fetch(
     //https://api.fnvr.ir/api/v1/words/word?category=${id}&level=${levelId}
+    //http://localhost:8000
 
-    `http://localhost:8000/api/v1/words/word?category=${id}&level=${levelId}&game=${gameId}&status=${status}`,
+    `https://api.fnvr.ir/api/v1/words/word?category=${id}&level=${levelId}&game=${gameId}&status=${status}`,
     {
       next: { tags: ["collection"] },
       method: "GET",

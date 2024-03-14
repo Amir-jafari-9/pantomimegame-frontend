@@ -1,6 +1,6 @@
 "use server";
 export default async function PostScoreData(postScoreData: any) {
-  const res = await fetch("http://localhost:8000/api/v1/games/game", {
+  const res = await fetch("https://api.fnvr.ir/api/v1/games/game", {
     method: "POST",
     mode: "cors",
     headers: {
