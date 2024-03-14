@@ -173,9 +173,10 @@ export default function Page({
             {data?.allGroups.map((group, index) => (
               <div
                 key={index}
-                className={`font-semibold relative rounded-full bg-gray-100 text-gray-800 flex flex-row justify-between px-5 py-2 ${
-                  group.group == data?.turn &&
-                  " bg-blue-400 border-[3px] border-blue-950 text-blue-950 "
+                className={`font-semibold relative rounded-full text-gray-800 flex flex-row justify-between px-5 py-2 ${
+                  group.group == data?.turn
+                    ? " bg-blue-400 border-[3px] border-blue-950 text-blue-950 "
+                    : "bg-gray-100"
                 }`}
               >
                 <Image
