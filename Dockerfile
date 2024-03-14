@@ -1,4 +1,4 @@
-FROM node:21-alpine AS base
+FROM node:20-alpine AS base
 
 # Rebuild the source code only when needed
 FROM base AS builder
