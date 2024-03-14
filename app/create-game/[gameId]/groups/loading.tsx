@@ -1,6 +1,7 @@
 "use client";
 import Lottie from "lottie-react";
-import animationData from "@/public/assets/AnimationLoading.json"; // Import your JSON file
+
+import animationData from "@/public/assets/animationLoading.json"; // Import your JSON file
 
 export default function Loading() {
   // Or a custom loading skeleton component
