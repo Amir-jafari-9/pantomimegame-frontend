@@ -34,6 +34,8 @@ export default function Page({
   const [quitAsk, setquitAsk] = useState(false);
   const [data, setData] = useState<ApiResponse | null>(null);
 
+  
+
   console.log("game id:", gameId);
   const router = useRouter();
   const pathname = usePathname();
@@ -42,6 +44,7 @@ export default function Page({
     const fetchDataAsync = async () => {
       try {
         const dataGet = await fetchGroupData(gameId);
+        console.log("groupssss", dataGet);
         setData(dataGet.data);
       } catch (error) {
         console.error("Failed to fetch data:", error);
@@ -161,11 +164,8 @@ export default function Page({
               <div
                 key={index}
                 className={`font-semibold relative rounded-full bg-gray-100 text-gray-800 flex flex-row justify-between px-5 py-2 ${
-                  group.group === data?.turn &&
-                  data?.currentRound &&
-                  data?.totalRound &&
-                  data.currentRound <= data.totalRound
-                    ? "border-[3px] border-blue-950 text-blue-950 bg-blue-200"
+                  group.group == data?.turn
+                    ? "border-[3px] border-blue-950 text-blue-950 bg-blue-300"
                     : ""
                 }`}
               >
@@ -287,7 +287,11 @@ export default function Page({
           </button>
         ) : (
           <div className="flex items-center justify-center gap-8">
-            <button onClick={() => router.push(`${pathname}/category`)}>
+            <button
+              onClick={() => {
+                router.push(`${pathname}/category`);
+              }}
+            >
               <Image
                 alt="icon image"
                 src="/assets/letsGo.svg"

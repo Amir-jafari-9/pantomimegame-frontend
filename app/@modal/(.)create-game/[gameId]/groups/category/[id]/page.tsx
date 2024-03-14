@@ -12,6 +12,7 @@ const Page = ({
   params: { id: string; gameId: string };
 }) => {
   const [data, setData] = useState<Data | null>(null);
+  const [show, setShow] = useState(true);
 
   interface Data {
     category: string;
@@ -39,51 +40,51 @@ const Page = ({
 
   return (
     <div>
-      {data && (
-        <div className="fixed inset-0 z-50 bg-black/80">
-          <div className="bg-[url('/assets/modalBg.svg')] bg-center bg-no-repeat flex flex-col items-center justify-center text-center fixed left-[50%] top-[50%] z-50  max-w-lg translate-x-[-50%] translate-y-[-50%]  sm:rounded-lg w-full h-full">
-            <section className=" flex flex-col items-center justify-center text-center w-full">
-              <div className="flex flex-col">
+      {/* {show && ( */}
+      <div className="fixed inset-0 z-50 bg-black/80">
+        <div className="bg-[url('/assets/modalBg.svg')] bg-center bg-no-repeat flex flex-col items-center justify-center text-center fixed left-[50%] top-[50%] z-50  max-w-lg translate-x-[-50%] translate-y-[-50%]  sm:rounded-lg w-full h-full">
+          <section className=" flex flex-col items-center justify-center text-center w-full">
+            <div className="flex flex-col">
+              <button
+                className=" hover:scale-105 transition-transform active:translate-y-1 self-start justify-self-start -mt-8 -mr-6"
+                onClick={() => {
+                  router.back();
+                }}
+              >
+                <Image
+                  alt="icon image"
+                  src="/assets/closeButton.svg"
+                  width={100}
+                  height={100}
+                  className="w-10"
+                />
+              </button>
+              <h1 className=" bg-[url('/assets/categoryBg.svg')] bg-center bg-contain h-14 bg-no-repeat flex flex-col items-center justify-center text-center text-white text-lg font-semibold mb-7">
+                {data?.name}
+              </h1>
+              {levels.map((level, index) => (
                 <button
-                  className=" hover:scale-105 transition-transform active:translate-y-1 self-start justify-self-start -mt-8 -mr-6"
+                  key={index}
                   onClick={() => {
-                    router.back();
+                    router.push(`${pathname}/level/${level.no}`);
+                    setShow(false);
                   }}
+                  className="hover:scale-105 transition-transform active:translate-y-1"
                 >
                   <Image
                     alt="icon image"
-                    src="/assets/closeButton.svg"
+                    src={level.icon}
                     width={100}
                     height={100}
-                    className="w-10"
+                    className="w-56"
                   />
                 </button>
-                <h1 className=" bg-[url('/assets/categoryBg.svg')] bg-center bg-contain h-14 bg-no-repeat flex flex-col items-center justify-center text-center text-white text-lg font-semibold mb-7">
-                  {data.name}
-                </h1>
-                {levels.map((level, index) => (
-                  <button
-                    key={index}
-                    onClick={() => {
-                      router.push(`${pathname}/level/${level.no}`);
-                      setData(null);
-                    }}
-                    className="hover:scale-105 transition-transform active:translate-y-1"
-                  >
-                    <Image
-                      alt="icon image"
-                      src={level.icon}
-                      width={100}
-                      height={100}
-                      className="w-56"
-                    />
-                  </button>
-                ))}
-              </div>
-            </section>
-          </div>
+              ))}
+            </div>
+          </section>
         </div>
-      )}
+      </div>
+      {/* )} */}
     </div>
   );
 };

@@ -125,36 +125,44 @@ export default function Page({
     const timeRemaining = timer;
     if (levelId !== "4") {
       const timeRemaining = timer;
-      if (timeRemaining <= 0) {
+      if (timeRemaining <= 10) {
+        // Create a new Audio object for the beep sound
+        const beepAudio = new Audio("/music/music2.mp3");
+        // Play the beep sound
+        beepAudio.play();
+        // Stop the beep sound after 10 seconds
+        setTimeout(() => {
+          beepAudio.pause();
+        }, 10000); // 10000 milliseconds = 10 seconds
+      }
+      if (timeRemaining <= 15) {
         setTimeScore(0);
-      } else if (timeRemaining <= 15) {
-        setTimeScore(2);
       } else if (timeRemaining <= 30) {
-        setTimeScore(4);
+        setTimeScore(2);
       } else if (timeRemaining <= 45) {
-        setTimeScore(6);
+        setTimeScore(4);
       } else if (timeRemaining <= 60) {
-        setTimeScore(8);
+        setTimeScore(6);
       } else if (timeRemaining <= 75) {
-        setTimeScore(10);
+        setTimeScore(8);
       } else if (timeRemaining <= 90) {
-        setTimeScore(12);
+        setTimeScore(10);
       } else if (timeRemaining <= 105) {
-        setTimeScore(14);
+        setTimeScore(12);
       } else if (timeRemaining <= 120) {
-        setTimeScore(16);
+        setTimeScore(14);
       } else if (timeRemaining <= 135) {
-        setTimeScore(20);
+        setTimeScore(16);
       } else if (timeRemaining <= 150) {
-        setTimeScore(22);
+        setTimeScore(18);
       } else if (timeRemaining <= 165) {
-        setTimeScore(24);
+        setTimeScore(20);
       } else {
-        setTimeScore(26);
+        setTimeScore(24);
       }
     } else {
       // Set timeScore to zero if levelId is equal to 4
-      setTimeScore(2);
+      setTimeScore(0);
     }
     return () => {
       if (interval) clearInterval(interval);
@@ -210,21 +218,22 @@ export default function Page({
     return savedMutedState === "true";
   });
 
-  // useEffect(() => {
-  //   const audio = new Audio("/music/music.mp3");
-  //   audio.loop = true;
-  //   audio.muted = muted;
-  //   audio.play();
-  //   Cookies.set("musicMuted", muted.toString());
-  //   const savedMutedState = Cookies.get("musicMuted");
-  //   if (savedMutedState) {
-  //     setMuted(savedMutedState === "true");
-  //   }
+  useEffect(() => {
+    const audio = new Audio("/music/music2.mp3");
+    audio.loop = true;
+    audio.volume = 0.5;
+    audio.muted = muted;
+    audio.play();
+    Cookies.set("musicMuted", muted.toString());
+    const savedMutedState = Cookies.get("musicMuted");
+    if (savedMutedState) {
+      setMuted(savedMutedState === "true");
+    }
 
-  //   return () => {
-  //     audio.pause();
-  //   };
-  // }, [muted]);
+    return () => {
+      audio.pause();
+    };
+  }, [muted]);
 
   const handleYesButtonClick = async () => {
     setComplete(true);
@@ -233,7 +242,7 @@ export default function Page({
     const postScoreData = {
       gameId: gameId,
       wordId: data?.words.wordId,
-      restTimePoints: timeScore - 2,
+      restTimePoints: timeScore,
       totalCheat: 3 - cheat,
       totalChange: 2 - clickCount,
       guess: true,
@@ -260,7 +269,7 @@ export default function Page({
     const postScoreData = {
       gameId: gameId,
       wordId: data?.words.wordId,
-      restTimePoints: timeScore - 2,
+      restTimePoints: timeScore,
       totalCheat: 3 - cheat,
       totalChange: 2 - clickCount,
       guess: false,
@@ -284,7 +293,7 @@ export default function Page({
       const postScoreData = {
         gameId: gameId,
         wordId: data?.words.wordId,
-        restTimePoints: timeScore - 2,
+        restTimePoints: timeScore,
         totalCheat: 3 - cheat,
         totalChange: 2 - clickCount,
         guess: false,
@@ -299,11 +308,25 @@ export default function Page({
       } catch (error) {
         console.error("Failed to send data:", error);
       }
+      const beepAudio = new Audio("/music/music2.mp3");
+      // Play the beep sound
+      beepAudio.play();
+      // Stop the beep sound after 10 seconds
+      setTimeout(() => {
+        beepAudio.pause();
+      }, 1000); // 10000 milliseconds = 10 seconds
     }
     setRedScreen(true);
     setTimeout(() => {
       setRedScreen(false);
     }, 200);
+    const beepAudio = new Audio("/music/music2.mp3");
+    // Play the beep sound
+    beepAudio.play();
+    // Stop the beep sound after 10 seconds
+    setTimeout(() => {
+      beepAudio.pause();
+    }, 10000); // 10000 milliseconds = 10 seconds
     // Use the functional form of setCheat to ensure you're working with the most up-to-date value
     setCheat((prevCheat) => prevCheat - 1);
     if (cheat - 1 === 0) {
@@ -572,7 +595,7 @@ export default function Page({
                     </p>
                     <div className="pl-2">
                       <div className="bg-[url('/assets/greenContainer.svg')] bg-center h-12 bg-no-repeat w-12 flex justify-center items-center text-white text-semibold text-xl">
-                        {timeScore - 2}
+                        {timeScore}
                       </div>
                     </div>
                   </div>
@@ -606,10 +629,7 @@ export default function Page({
                 </p>
                 {data && (
                   <p className="text-white text-semibold text-lg">
-                    {data?.score -
-                      (3 - cheat) -
-                      (2 - clickCount) +
-                      (timeScore - 2)}
+                    {data?.score - (3 - cheat) - (2 - clickCount) + timeScore}
                   </p>
                 )}
               </div>
