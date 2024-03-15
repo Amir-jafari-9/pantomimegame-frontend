@@ -301,15 +301,13 @@ export default function Page({
   const handleAskquitButtonClick = async () => {
     setquitAsk(true);
     setTimerActive(false);
-    const beepAudio = new Audio(
-      "/music/they_ask_you_how_you_are_and_you_just_have_to_say_that_youre_fine.mp3"
-    );
-    // Play the beep sound
-    beepAudio.play();
-    // Stop the beep sound after 10 seconds
-    setTimeout(() => {
-      beepAudio.pause();
-    }, 7000); // 10000 milliseconds = 10 seconds
+    // const beepAudio = new Audio(
+    //   "/music/they_ask_you_how_you_are_and_you_just_have_to_say_that_youre_fine.mp3"
+    // );
+    // beepAudio.play();
+    // setTimeout(() => {
+    //   beepAudio.pause();
+    // }, 7000);
   };
 
   const handleCheatButtonClick = async () => {
@@ -333,13 +331,13 @@ export default function Page({
       } catch (error) {
         console.error("Failed to send data:", error);
       }
-      const beepAudio = new Audio("/music/eww-brother-eww.mp3");
-      // Play the beep sound
-      beepAudio.play();
-      // Stop the beep sound after 10 seconds
-      setTimeout(() => {
-        beepAudio.pause();
-      }, 11000); // 10000 milliseconds = 10 seconds
+      // const beepAudio = new Audio("/music/eww-brother-eww.mp3");
+      // // Play the beep sound
+      // beepAudio.play();
+      // // Stop the beep sound after 10 seconds
+      // setTimeout(() => {
+      //   beepAudio.pause();
+      // }, 11000); // 10000 milliseconds = 10 seconds
     }
     setRedScreen(true);
     setTimeout(() => {
@@ -407,6 +405,7 @@ export default function Page({
             <button
               onClick={() => {
                 setRules(true);
+                setTimerActive(false);
               }}
             >
               <Image
@@ -504,7 +503,12 @@ export default function Page({
             <section className=" bg-transparent h-full flex flex-col items-center justify-center text-center fixed left-[50%] top-[50%] z-50 max-w-lg translate-x-[-50%] translate-y-[-50%] sm:rounded-lg w-full lg:px-20 gap-2">
               <div className="bg-[url('/assets/quitModal.svg')] bg-center h-max bg-no-repeat w-max py-28 px-40 relative">
                 <div className="flex gap-2 bottom-8 left-6 absolute">
-                  <button onClick={() => setquitAsk(false)}>
+                  <button
+                    onClick={() => {
+                      setquitAsk(false);
+                      setTimerActive(true);
+                    }}
+                  >
                     <Image
                       alt="icon image"
                       src="/assets/noButton.svg"
@@ -564,6 +568,7 @@ export default function Page({
                 className="z-50 -mb-24 justify-self-end w-12 mr-6 lg:-mb-32"
                 onClick={() => {
                   setRules(false);
+                  setTimerActive(true);
                 }}
               >
                 <Image
