@@ -232,14 +232,14 @@ export default function Page({
             {sortedGroups?.map((group, index) => (
               <div
                 key={index}
-                className={`font-semibold relative rounded-full bg-gray-100 text-gray-800 flex flex-row justify-between px-5 py-2 ${
+                className={`font-semibold relative rounded-full text-gray-800 flex flex-row justify-between px-5 py-2 ${
                   index === highestFinishedScoreIndex
                     ? "bg-amber-300"
                     : index === thirdFinishedScoreIndex
                     ? "bg-red-200"
                     : index === secondFinishedScoreIndex
                     ? "bg-gray-400"
-                    : ""
+                    : "bg-gray-100"
                 }`}
               >
                 <Image
