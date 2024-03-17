@@ -41,6 +41,8 @@ export default function Page({
   const [clickCount, setClickCount] = useState(2);
   const [redScreen, setRedScreen] = useState(false);
   const [rules, setRules] = useState(false);
+  const [stopMusic, setStopMusic] = useState(false);
+
   // const [timer, setTimer] = useState(0);
   const [timer, setTimer] = useState(() => {
     let initialTime = 0;
@@ -298,12 +300,25 @@ export default function Page({
       console.error("Failed to send data:", error);
     }
   };
+
+  const emoSoundRef = useRef<null | HTMLAudioElement>(null);
+
+  const emoPlaySound = () => {
+    emoSoundRef.current?.play();
+  };
+  const emoPauseSound = () => {
+    emoSoundRef.current?.pause();
+  };
+
   const handleAskquitButtonClick = async () => {
     setquitAsk(true);
     setTimerActive(false);
-    // const beepAudio = new Audio(
-    //   "/music/they_ask_you_how_you_are_and_you_just_have_to_say_that_youre_fine.mp3"
-    // );
+    const emoAudio = new Audio(
+      "/music/they_ask_you_how_you_are_and_you_just_have_to_say_that_youre_fine.mp3"
+    );
+    emoSoundRef.current = emoAudio;
+    emoPlaySound();
+
     // beepAudio.play();
     // setTimeout(() => {
     //   beepAudio.pause();
@@ -331,13 +346,6 @@ export default function Page({
       } catch (error) {
         console.error("Failed to send data:", error);
       }
-      // const beepAudio = new Audio("/music/eww-brother-eww.mp3");
-      // // Play the beep sound
-      // beepAudio.play();
-      // // Stop the beep sound after 10 seconds
-      // setTimeout(() => {
-      //   beepAudio.pause();
-      // }, 11000); // 10000 milliseconds = 10 seconds
     }
     setRedScreen(true);
     setTimeout(() => {
@@ -358,6 +366,23 @@ export default function Page({
 
     // Check if gameTitle is empty or contains only whitespace
   };
+
+  const ewSoundRef = useRef<null | HTMLAudioElement>(null);
+
+  const playSound = () => {
+    ewSoundRef.current?.play();
+  };
+  const pauseSound = () => {
+    ewSoundRef.current?.pause();
+  };
+
+  useEffect(() => {
+    const ewwAudio = new Audio("/music/eww-brother-eww.mp3");
+    ewSoundRef.current = ewwAudio;
+    if (cheat === 0) {
+      playSound();
+    }
+  }, [cheat]);
 
   const handleTimesUpButtonClick = async () => {
     // Check if gameTitle is empty or contains only whitespace
@@ -483,6 +508,7 @@ export default function Page({
               </div>
               <button
                 onClick={() => {
+                  emoPauseSound();
                   router.push(`/create-game/${gameId}/groups`);
                   router.refresh();
                 }}
@@ -545,6 +571,7 @@ export default function Page({
               </div>
               <button
                 onClick={() => {
+                  pauseSound();
                   router.push(`/create-game/${gameId}/groups`);
                   router.refresh();
                 }}
