@@ -3,7 +3,7 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import fetchData from "./dataFetch";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import Lottie from "lottie-react";
 import animationData from "../../../../../../../../public/assets/animationData.json"; // Import your JSON file
 import animationConfetti from "../../../../../../../../public/assets/animationConfetti.json"; // Import your JSON file
@@ -274,6 +274,18 @@ export default function Page({
     }
   };
 
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+
+  useEffect(() => {
+    const url = `${pathname}`
+    if (pathname !== url) {
+      setquitAsk(true);
+      setTimerActive(false);
+    }
+    // Do something here...
+  }, [pathname, searchParams]);
+
   const handlequitButtonClick = async () => {
     setquitAsk(false);
     setquit(true);
@@ -318,11 +330,6 @@ export default function Page({
     );
     emoSoundRef.current = emoAudio;
     emoPlaySound();
-
-    // beepAudio.play();
-    // setTimeout(() => {
-    //   beepAudio.pause();
-    // }, 7000);
   };
 
   const handleCheatButtonClick = async () => {

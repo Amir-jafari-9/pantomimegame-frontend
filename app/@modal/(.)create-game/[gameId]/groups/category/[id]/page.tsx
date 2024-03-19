@@ -66,7 +66,7 @@ const Page = ({
                   <button
                     key={index}
                     onClick={() => {
-                      router.push(`${pathname}/level/${level.no}`);
+                      router.replace(`${pathname}/level/${level.no}`);
                       setShow(false);
                       router.refresh()
                     }}
